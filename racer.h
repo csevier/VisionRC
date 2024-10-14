@@ -34,6 +34,7 @@ public:
     std::vector<Racer>& GetOverlapping();
     void SetOverlapping(std::vector<Racer> racers);
     void ClearOverlaps();
+    char* GetNotes();
 
 private:
     bool mHasCheckedIn = false;
@@ -47,6 +48,7 @@ private:
     ImVec4 mUpperBoundColorHSV255 = {0.0f, 0.0f, 0.0f, 255.0f};
     ImVec4 mColorHSV255= {0.0f, 0.0f, 0.0f, 255.0f};
     std::vector<Racer> mOverlappingWith;
+    char mNotes[1024] = "";
 };
 
 #endif // RACER_H

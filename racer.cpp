@@ -154,3 +154,8 @@ bool Racer::HasStarted()
 {
     return mStartedAt > 0;
 }
+
+char* Racer::GetNotes()
+{
+    return mNotes;
+}

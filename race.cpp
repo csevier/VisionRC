@@ -119,6 +119,9 @@ void Race::Draw()
             racer.second.SetUpperColor(racer.second.GetUpperColorHSV1().x *255, racer.second.GetUpperColorHSV1().y *255 ,racer.second.GetUpperColorHSV1().z *255);
         }
 
+
+        ImGui::InputTextMultiline("Notes (1024 characters)", racer.second.GetNotes(), 1024);
+
         if(GetRaceStatus() == RaceStatus::CHECKING_IN)
         {
             if(racer.second.HasCheckedIn())
