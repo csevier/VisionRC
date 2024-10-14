@@ -28,6 +28,8 @@ public:
     void StartRace();
     void EndRace();
     void Reset();
+    void ExportRace();
+
 private:
     std::map<std::string, Racer> mRacers;
     RaceStatus mStatus;
