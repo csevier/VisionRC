@@ -8,6 +8,8 @@ Camera::Camera(SDL_Renderer* renderer, int id)
 {
     mRenderer = renderer;
     mVideo = cv::VideoCapture(id, cv::CAP_V4L2);
+    int codec = cv::VideoWriter::fourcc('m','p', '4', 'v');
+    mVideoOut = cv::VideoWriter("race.mp4",codec,30, cv::Size2i(640,480));
     mVideo.set(cv::CAP_PROP_FRAME_WIDTH, 640);
     mVideo.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
     mVideo.set(cv::CAP_PROP_BRIGHTNESS, 128);
@@ -29,6 +31,10 @@ void Camera::NextFrame()
     mMasks["main_bgr"]->SetMatrix(currentFrameBGR);
     mMasks["main_hsv"]->SetMatrix(currentFrameHSV);
     UpdateColorSelectFrame();
+    if(mRecord)
+    {
+       mVideoOut.write(currentFrameBGR);
+    }
 }
 
 std::chrono::time_point<std::chrono::system_clock>& Camera::GetFrameTimeStamp()
@@ -63,6 +69,7 @@ bool Camera::RacerInFrame(Racer& racer)
 Camera::~Camera()
 {
     mVideo.release();
+    mVideoOut.release();
 }
 
 
@@ -143,4 +150,14 @@ void Camera::UpdateColorSelectFrame()
     cv::cvtColor(mMasks["select_color"]->GetMatrix(), out, cv::COLOR_GRAY2BGR);
     cv::bitwise_and( mMasks["main_bgr"]->GetMatrix(),out, out);
     mMasks["select_color"]->SetMatrix(out);
+}
+
+void Camera::Record()
+{
+    mRecord = true;
+}
+
+void Camera::StopRecording()
+{
+    mRecord = false;
 }

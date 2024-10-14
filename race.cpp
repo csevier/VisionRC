@@ -28,6 +28,7 @@ void Race::Draw()
     {
         mRacerClockInDelay = delayInSeconds *1000;
     }
+    ImGui::Checkbox("Record Race", &mShouldRecordRace);
     std::string statusText;
     switch (mStatus)
     {
@@ -203,6 +204,18 @@ void Race::Update(Camera& raceCamera)
     if(GetRaceStatus() == RaceStatus::RUNNING)
     {
         mCurrentTime = SDL_GetTicks() - mRaceStartedAt;
+        if(mShouldRecordRace)
+        {
+            raceCamera.Record();
+        }
+        else
+        {
+            raceCamera.StopRecording();
+        }
+    }
+    if(GetRaceStatus() == RaceStatus::ENDED)
+    {
+        raceCamera.StopRecording();
     }
     for(auto& racer : mRacers)
     {

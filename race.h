@@ -36,6 +36,7 @@ private:
     Uint32 mRaceStartedAt =0;
     Uint32 mRacerClockInDelay = 10000; // milliseconds.
     std::string FormatTime(Uint32 time);
+    bool mShouldRecordRace;
 };
 
 extern Race CURRENT_RACE;

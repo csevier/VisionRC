@@ -16,11 +16,15 @@ public:
     std::chrono::time_point<std::chrono::system_clock>& GetFrameTimeStamp();
     bool RacerInFrame(Racer& racer);
     void Draw();
+    void Record();
+    void StopRecording();
 
 private:
     void SampleColor(ImVec2 race_cam_min_loc, ImVec2 race_cam_max_loc);
     void UpdateColorSelectFrame();
     cv::VideoCapture mVideo;
+    cv::VideoWriter mVideoOut;
+    bool mRecord = false;
     std::map<std::string, std::unique_ptr<CameraFrame>> mMasks;
     SDL_Renderer* mRenderer;
     bool mRacerFoundThisFrame = false;
