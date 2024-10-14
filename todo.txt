@@ -14,6 +14,7 @@ Allow editable track times for error correct.
 Racer list export / import so when cars are used between app runs its easier to get started.
 Text to speech announcements
 Race Durations with state for racers to finish after the bell.
+Allow resolution adjustment.
 
 
 Bugs
@@ -22,4 +23,5 @@ Dont assume cam is present, check for it and if its not there, dont crash but di
 More error handling in general, were very happy path right now.
 Dont usem v4l2 camera backend, needs to be cross plat.
 App crashes when more then 2 check in cars have multiple overlaps. Fix it.
+Dont assume resolutions!
 
