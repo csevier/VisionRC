@@ -12,6 +12,8 @@ Mask recordings so you can error correct.
 Allow post analysis of recorded race for error correct.
 Allow editable track times for error correct.
 Racer list export / import so when cars are used between app runs its easier to get started.
+Text to speech announcements
+Race Durations with state for racers to finish after the bell.
 
 
 Bugs
