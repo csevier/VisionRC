@@ -108,13 +108,13 @@ void Race::Draw()
                           ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_InputHSV);
 
         std::string lower = racer.second.GetName() + " lower bounds";
-        if(ImGui::ColorEdit3(lower.c_str(), (float*)& racer.second.GetLowerColorHSV1(),  ImGuiColorEditFlags_DisplayHSV | ImGuiColorEditFlags_InputHSV))
+        if(ImGui::ColorEdit3(lower.c_str(), (float*)& racer.second.GetLowerColorHSV1(),  ImGuiColorEditFlags_DisplayHSV | ImGuiColorEditFlags_InputHSV | ImGuiColorEditFlags_NoPicker))
         {
             racer.second.SetLowerColor(racer.second.GetLowerColorHSV1().x *255, racer.second.GetLowerColorHSV1().y *255 ,racer.second.GetLowerColorHSV1().z *255);
         }
 
         std::string upper = racer.second.GetName() + " upper bounds";
-        if(ImGui::ColorEdit3(upper.c_str(), (float*)& racer.second.GetUpperColorHSV1(),  ImGuiColorEditFlags_DisplayHSV | ImGuiColorEditFlags_InputHSV))
+        if(ImGui::ColorEdit3(upper.c_str(), (float*)& racer.second.GetUpperColorHSV1(),  ImGuiColorEditFlags_DisplayHSV | ImGuiColorEditFlags_InputHSV | ImGuiColorEditFlags_NoPicker))
         {
             racer.second.SetUpperColor(racer.second.GetUpperColorHSV1().x *255, racer.second.GetUpperColorHSV1().y *255 ,racer.second.GetUpperColorHSV1().z *255);
         }
