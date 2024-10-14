@@ -283,15 +283,22 @@ std::string Race::FormatTime(Uint32 time)
 void Race::ExportRace()
 {
     std::ofstream out("race.txt");
+    out << "Race Duration: " << FormatTime(mCurrentTime) << std::endl << std::endl;
     for(auto &racer : mRacers)
     {
-        out << racer.second.GetName() + " Started at: " + FormatTime(racer.second.StartedAt()) << std::endl;
+        out << racer.second.GetName() << std::endl;
+        out << "============================" << std::endl;
+        out << "Notes:" << std::endl;
+        out << "    " << racer.second.GetNotes() << std::endl;
+        out << "Laps:" << std::endl;
+        out << "    " << racer.second.GetName() + " Started at: " + FormatTime(racer.second.StartedAt()) << std::endl;
         for(int i = 0; i < racer.second.GetLapTimes().size(); i++)
         {
             std::string label = racer.second.GetName() + " Lap " + std::to_string(i + 1) + ": ";
             Uint32 lapTime = racer.second.GetLapTimes()[i];
-            out << label + FormatTime(lapTime) << std::endl;
+            out << "    " << label + FormatTime(lapTime) << std::endl;
         }
+        out << std::endl;
         out << std::endl;
     }
     out.close();
