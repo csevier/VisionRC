@@ -72,9 +72,13 @@ void Race::Draw()
         {
             if (ImGui::BeginTabItem(racer.second.GetName().c_str()))
             {
+                if(racer.second.HasStarted())
+                {
+                    ImGui::LabelText(FormatTime(racer.second.StartedAt()).c_str(), "Started at: ");
+                }
                 for(int i = 0; i < racer.second.GetLapTimes().size(); i++)
                 {
-                    std::string label = racer.second.GetName() + " Lap " + std::to_string(i) + ": ";
+                    std::string label = racer.second.GetName() + " Lap " + std::to_string(i + 1) + ": ";
                     Uint32 lapTime = racer.second.GetLapTimes()[i];
                     ImGui::LabelText(FormatTime(lapTime).c_str(), label.c_str());
                 }
@@ -111,11 +115,26 @@ void Race::Draw()
         {
             if(racer.second.HasCheckedIn())
             {
-               ImGui::LabelText("True", "Has Checked In: ");
+                ImGui::LabelText("True", "Has Checked In: ");
             }
             else
             {
-                 ImGui::LabelText("False", "Has Checked In: ");
+                ImGui::LabelText("False", "Has Checked In: ");
+            }
+            if(racer.second.IsOverlapping())
+            {
+                ImGui::SameLine();
+                ImGui::TextColored(ImVec4(1,0,0,1), "WARNING RACER OVERLAP DETECTED WITH: ");
+                ImGui::SameLine();
+                std::string names;
+
+
+
+                for(Racer overlap : racer.second.GetOverlapping())
+                {
+                    names += overlap.GetName() + ", ";
+                }
+                ImGui::TextColored(ImVec4(1,0,0,1), names.c_str());
             }
         }
 
@@ -190,7 +209,25 @@ void Race::Update(Camera& raceCamera)
         bool racerInFrame = raceCamera.RacerInFrame(racer.second);
         if(GetRaceStatus() == RaceStatus::CHECKING_IN && racerInFrame)
         {
-            racer.second.CheckIn();
+            std::vector<Racer> overlappingRacers;
+            for(auto& otherRacers : mRacers) // checking overlap
+            {
+                bool racerInFrame = raceCamera.RacerInFrame(otherRacers.second);
+                if(racerInFrame && otherRacers.second.GetName() != racer.second.GetName())
+                {
+                    overlappingRacers.push_back(otherRacers.second);
+                }
+            }
+            if(overlappingRacers.size() == 0) // no overlap
+            {
+                racer.second.CheckIn();
+                racer.second.ClearOverlaps();
+            }
+            else
+            {
+                racer.second.CheckOut();
+                racer.second.SetOverlapping(overlappingRacers);
+            } // overlap with
         }
         if(GetRaceStatus() == RaceStatus::RUNNING && racerInFrame)
         {

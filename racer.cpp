@@ -126,5 +126,31 @@ void Racer::Reset()
 {
     CheckOut();
     mLastClocked = 0;
+    mStartedAt = 0;
     mLaptimes.clear();
+}
+
+bool Racer::IsOverlapping()
+{
+    return mOverlappingWith.size() != 0;
+}
+
+std::vector<Racer>& Racer::GetOverlapping()
+{
+    return mOverlappingWith;
+}
+
+void Racer::SetOverlapping(std::vector<Racer> racers)
+{
+    mOverlappingWith = racers;
+}
+
+void Racer::ClearOverlaps()
+{
+    mOverlappingWith.clear();
+}
+
+bool Racer::HasStarted()
+{
+    return mStartedAt > 0;
 }

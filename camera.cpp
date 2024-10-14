@@ -12,6 +12,8 @@ Camera::Camera(SDL_Renderer* renderer, int id)
     mVideo.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
     mVideo.set(cv::CAP_PROP_BRIGHTNESS, 128);
     mVideo.set(cv::CAP_PROP_AUTO_EXPOSURE, 1);
+    mExposure = mVideo.get(cv::CAP_PROP_EXPOSURE);
+    mBrightness = mVideo.get(cv::CAP_PROP_BRIGHTNESS);
     mMasks["main_hsv"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["main_bgr"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["select_color"] =  std::make_unique<CameraFrame>(renderer);
@@ -74,7 +76,7 @@ void Camera::Draw()
     ImVec2 race_cam_size = ImGui::GetItemRectSize();
     if (ImGui::BeginPopupContextWindow("my popup"))
     {
-        ImGui::SeparatorText("Racers!");
+        ImGui::SeparatorText("Apply Color To:");
         for (auto& racer : CURRENT_RACE.GetRacers())
         {
             if (ImGui::Selectable(racer.first.c_str(), ImGuiSelectableFlags_DontClosePopups))
@@ -87,6 +89,14 @@ void Camera::Draw()
     else
     {
          SampleColor(race_cam_min_loc, race_cam_size);
+    }
+    if(ImGui::SliderInt("Exposure", &mExposure, 0, 1000))
+    {
+        mVideo.set(cv::CAP_PROP_EXPOSURE, mExposure);
+    }
+    if (ImGui::SliderInt("Brightness", &mBrightness, 0, 1000))
+    {
+        mVideo.set(cv::CAP_PROP_BRIGHTNESS, mBrightness);
     }
     ImGui::End();
     ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;

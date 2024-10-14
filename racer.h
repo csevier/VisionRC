@@ -27,8 +27,13 @@ public:
     Uint32 LastClockIn();
     void StartedAt(Uint32 startedAt);
     Uint32 StartedAt();
+    bool HasStarted();
     std::vector<Uint32>& GetLapTimes();
     void Reset();
+    bool IsOverlapping();
+    std::vector<Racer>& GetOverlapping();
+    void SetOverlapping(std::vector<Racer> racers);
+    void ClearOverlaps();
 
 private:
     bool mHasCheckedIn = false;
@@ -41,6 +46,7 @@ private:
     ImVec4 mUpperBoundColorHSV1 ={0.0f, 0.0f, 0.0f, 1.0f};
     ImVec4 mUpperBoundColorHSV255 = {0.0f, 0.0f, 0.0f, 255.0f};
     ImVec4 mColorHSV255= {0.0f, 0.0f, 0.0f, 255.0f};
+    std::vector<Racer> mOverlappingWith;
 };
 
 #endif // RACER_H

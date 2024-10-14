@@ -27,6 +27,8 @@ private:
     ImVec4 mRacerColorFromMouseHSV255;
     std::chrono::time_point<std::chrono::system_clock> mFrameTimeStamp;
     bool mUserIsAssigningRacerColor = false;
+    int mExposure = 0;
+    int mBrightness =0;
 };
 
 #endif // CAMERA_H
