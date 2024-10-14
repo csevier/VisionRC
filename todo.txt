@@ -6,7 +6,6 @@ Remote Camera - Allow user to input an ip camera, rstp stream
 Agents - Need mobile app to serve as an agent for cameras in both live and offline mode.
 Point to point race support.
 Post race visualization graphs.
-Car configuration associations so racers can see what car setting they had for that race. 
 Pre-configured layouts for selection.
 Mask recordings so you can error correct.
 Allow post analysis of recorded race for error correct.
