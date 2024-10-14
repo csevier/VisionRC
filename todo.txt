@@ -1,0 +1,23 @@
+Features
+=============
+Offline mode - Allow pulling in video and sampling/tracking/timing a race based on that pre-recorded video
+Multiple Cam sources - Allow user to choose a cam source from any available
+Remote Camera - Allow user to input an ip camera, rstp stream
+Agents - Need mobile app to serve as an agent for cameras in both live and offline mode.
+Point to point race support.
+Post race visualization graphs.
+Car configuration associations so racers can see what car setting they had for that race. 
+Pre-configured layouts for selection.
+Mask recordings so you can error correct.
+Allow post analysis of recorded race for error correct.
+Allow editable track times for error correct.
+Racer list export / import so when cars are used between app runs its easier to get started.
+
+
+Bugs
+=============
+Dont assume cam is present, check for it and if its not there, dont crash but display black.
+More error handling in general, were very happy path right now.
+Dont usem v4l2 camera backend, needs to be cross plat.
+App crashes when more then 2 check in cars have multiple overlaps. Fix it.
+
