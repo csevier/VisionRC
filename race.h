@@ -34,7 +34,7 @@ private:
     Uint32 mCurrentTime = 0;
     Uint32 mRaceEndedAt = 0;
     Uint32 mRaceStartedAt =0;
-    Uint32 mRacerClockInDelay = 10000;
+    Uint32 mRacerClockInDelay = 10000; // milliseconds.
     std::string FormatTime(Uint32 time);
 };
 

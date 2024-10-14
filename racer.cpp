@@ -90,13 +90,31 @@ void Racer::CheckOut()
 
 void Racer::ClockIn(Uint32 clockTime)
 {
-    mLaptimes.push_back(clockTime - mLastClocked);
+    if (mLaptimes.size() == 0)
+    {
+        mLaptimes.push_back(clockTime - mStartedAt);
+    }
+    else
+    {
+        mLaptimes.push_back(clockTime - mLastClocked);
+    }
     mLastClocked = clockTime;
 }
 
 Uint32 Racer::LastClockIn()
 {
     return mLastClocked;
+}
+
+Uint32 Racer::StartedAt()
+{
+    return mStartedAt;
+}
+
+void Racer::StartedAt(Uint32 startedAt)
+{
+    mStartedAt = startedAt;
+    mLastClocked = startedAt; // skip a lap marker but mark clock in time for delay.
 }
 
 std::vector<Uint32>& Racer::GetLapTimes()

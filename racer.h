@@ -25,12 +25,15 @@ public:
     void CheckOut();
     void ClockIn(Uint32 clockTime);
     Uint32 LastClockIn();
+    void StartedAt(Uint32 startedAt);
+    Uint32 StartedAt();
     std::vector<Uint32>& GetLapTimes();
     void Reset();
 
 private:
     bool mHasCheckedIn = false;
     Uint32 mLastClocked = 0;
+    Uint32 mStartedAt = 0;
     std::vector<Uint32> mLaptimes;
     std::string mName;
     ImVec4 mlowerBoundColorHSV1 ={0.0f, 0.0f, 0.0f, 1.0f};

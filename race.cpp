@@ -23,6 +23,11 @@ void Race::RemoveRacer(std::string racerName)
 void Race::Draw()
 {
     ImGui::Begin("Race");
+    int delayInSeconds  = mRacerClockInDelay / 1000;
+    if(ImGui::SliderInt("Racer Delay", &delayInSeconds,0,100))
+    {
+        mRacerClockInDelay = delayInSeconds *1000;
+    }
     std::string statusText;
     switch (mStatus)
     {
@@ -189,7 +194,11 @@ void Race::Update(Camera& raceCamera)
         }
         if(GetRaceStatus() == RaceStatus::RUNNING && racerInFrame)
         {
-            if(racer.second.LastClockIn() == 0 || (mCurrentTime - racer.second.LastClockIn()) > mRacerClockInDelay)
+            if(racer.second.LastClockIn() == 0)
+            {
+                racer.second.StartedAt(mCurrentTime);
+            }
+            else if((mCurrentTime - racer.second.LastClockIn()) > mRacerClockInDelay)
             {
                 racer.second.ClockIn(mCurrentTime);
             }
