@@ -14,6 +14,7 @@ Race::Race()
 
 void Race::AddRacer(Racer racer)
 {
+    if(racer.GetName().empty() || std::all_of(racer.GetName().begin(),racer.GetName().end(),isspace)) return;
     mRacers[racer.GetName()] = racer;
 }
 
@@ -161,7 +162,7 @@ void Race::Draw()
         Racer newRacer;
         newRacer.SetName(str0);
         memset(str0, 0, sizeof str0);
-        mRacers[newRacer.GetName()] = newRacer;
+        AddRacer(newRacer);
     }
     ImGui::End();
 }
