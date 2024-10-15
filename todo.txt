@@ -20,10 +20,6 @@ Race Durations with state for racers to finish after the bell.
 Allow resolution adjustment.
 Make video export dialogue.
 Make race report a dialogue
-Show racer positions.
-Add racer positions to exported race results.
-
-
 
 Bugs
 =============
