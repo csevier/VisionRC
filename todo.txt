@@ -19,7 +19,7 @@ Make video export dialogue.
 Make race report a dialogue
 
 
-Bugs
+Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
 =============
 Dont assume cam is present, check for it and if its not there, dont crash but display black.
 More error handling in general, were very happy path right now.

@@ -96,7 +96,8 @@ int App::Run()
     bool show_demo_window = false;
     //ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
-    Camera race_camera = Camera(mRenderer,0);
+    std::unique_ptr<Camera> race_camera = nullptr;
+    //Camera race_camera = Camera(mRenderer,0);
     //Camera race_camera = Camera(mRenderer, "race_mini.mp4");
 
     // Main loop
@@ -111,8 +112,8 @@ int App::Run()
         delta = a - b;
         if (delta > 1000 / desiredFPS )
         {
-            desiredFPS = race_camera.GetCameraFPS();
             b = a;
+
             // Poll and handle events (inputs, window resize, etc.)
             // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
             // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
@@ -137,20 +138,43 @@ int App::Run()
             ImGui_ImplSDLRenderer2_NewFrame();
             ImGui_ImplSDL2_NewFrame();
             ImGui::NewFrame();
-            race_camera.NextFrame();
 
-
+            if (race_camera != nullptr)
+            {
+                desiredFPS = race_camera->GetCameraFPS();
+                race_camera->NextFrame();
+                CURRENT_RACE.Update(*race_camera);
+                race_camera->Draw();
+                CURRENT_RACE.Draw();
+                ImGui::Begin("Performance Counter");                          // Create a window called "Hello, world!" and append into it.
+                ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+                ImGui::End();
+            }
+            else
+            {
+                ImGui::Begin("Select Race Camera Source");
+                if(ImGui::Button("Live From USB Camera"))
+                {
+                    race_camera = std::make_unique<Camera>(mRenderer, 0);
+                }
+                ImGui::SameLine();
+                if(ImGui::Button("Offline Video"))
+                {
+                    race_camera = std::make_unique<Camera>(mRenderer, "race_mini.mp4");
+                }
+                //ImGui::SameLine();
+                // if(ImGui::Button("Live From IP Camera"))
+                // {
+                //     //race_camera = std::make_unique<Camera>(mRenderer, "rtsp://<ip>:port/etc");
+                // }
+                ImGui::End();
+                // select cam type
+            }
             // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
             if (show_demo_window)
                 ImGui::ShowDemoWindow(&show_demo_window);
 
-            CURRENT_RACE.Update(race_camera);
-            race_camera.Draw();
-            CURRENT_RACE.Draw();
 
-            ImGui::Begin("Performance Counter");                          // Create a window called "Hello, world!" and append into it.
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::End();
 
             // Rendering
             ImGui::Render();
