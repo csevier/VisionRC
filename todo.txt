@@ -1,10 +1,7 @@
-Features
+Features for v1
 =============
-Offline mode - Allow pulling in video and sampling/tracking/timing a race based on that pre-recorded video
-Multiple Cam sources - Allow user to choose a cam source from any available
-Remote Camera - Allow user to input an ip camera, rstp stream
+Multiple Cam sources - Allow user to choose a cam source from any available, either file or usb or remote rtsp stream.
 Agents - Need mobile app to serve as an agent for cameras in both live and offline mode.
-Point to point race support.
 Post race visualization graphs.
 Pre-configured layouts for selection.
 Mask recordings so you can error correct.
@@ -20,6 +17,11 @@ Race Durations with state for racers to finish after the bell.
 Allow resolution adjustment.
 Make video export dialogue.
 Make race report a dialogue
+
+Features for v2
+=============
+Multiple cams at once support.
+Point to point race support.
 
 Bugs
 =============
