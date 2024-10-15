@@ -103,7 +103,15 @@ void Race::Draw()
                 {
                     std::string label = racer.second.GetName() + " Lap " + std::to_string(i + 1) + ": ";
                     Uint32 lapTime = racer.second.GetLapTimes()[i];
-                    ImGui::LabelText(FormatTime(lapTime).c_str(), label.c_str());
+                    if (lapTime == racer.second.FastestLapTime())
+                    {
+                        std::string fastest = label + FormatTime(lapTime);
+                        ImGui::TextColored(ImVec4(0,1,0,1),fastest.c_str());
+                    }
+                    else
+                    {
+                        ImGui::LabelText(FormatTime(lapTime).c_str(), label.c_str());
+                    }
                 }
                 ImGui::EndTabItem();
             }
@@ -324,7 +332,9 @@ void Race::ExportRace()
         out << racer.second.GetName() << std::endl;
         out << "============================" << std::endl;
         out << "Notes:" << std::endl;
-        out << "    " << racer.second.GetNotes() << std::endl;
+        out << "    " << racer.second.GetNotes() << std::endl << std::endl;
+        out << "Fastest Lap: " << FormatTime(racer.second.FastestLapTime()) << std::endl << std::endl;
+        out << "Average Lap: " << FormatTime(racer.second.AverageLapTime()) << std::endl << std::endl;
         out << "Laps:" << std::endl;
         out << "    " << racer.second.GetName() + " Started at: " + FormatTime(racer.second.StartedAt()) << std::endl;
         for(int i = 0; i < racer.second.GetLapTimes().size(); i++)

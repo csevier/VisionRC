@@ -173,5 +173,31 @@ Uint32 Racer::GetTotalTime()
         totalTime += n;
     }
     return totalTime;
+}
 
+Uint32 Racer::AverageLapTime()
+{
+   return GetTotalTime() / GetTotalLaps();
+}
+
+Uint32 Racer::FastestLapTime()
+{
+    Uint32 fastestLapTime =0;
+    if (GetTotalLaps() == 0)
+    {
+        return fastestLapTime;
+    }
+    else
+    {
+        fastestLapTime = mLaptimes[0];
+    }
+
+    for (auto& n : mLaptimes)
+    {
+        if (n <fastestLapTime)
+        {
+            fastestLapTime = n ;
+        }
+    }
+    return fastestLapTime;
 }

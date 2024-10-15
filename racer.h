@@ -37,6 +37,8 @@ public:
     char* GetNotes();
     int GetTotalLaps();
     Uint32 GetTotalTime();
+    Uint32 AverageLapTime();
+    Uint32 FastestLapTime();
 
 private:
     bool mHasCheckedIn = false;
