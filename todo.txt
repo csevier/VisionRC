@@ -18,10 +18,6 @@ Allow resolution adjustment.
 Make video export dialogue.
 Make race report a dialogue
 
-Features for v2
-=============
-Multiple cams at once support.
-Point to point race support.
 
 Bugs
 =============
@@ -30,5 +26,14 @@ More error handling in general, were very happy path right now.
 Dont usem v4l2 camera backend, needs to be cross plat.
 App crashes when more then 2 check in cars have multiple overlaps. Fix it.
 Dont assume resolutions!
+Video playback in offline mode is suppose to match framerate but is slower then actual time.?!?!?s
+
+
+
+Features for v2
+=============
+Multiple cams at once support.
+Point to point race support.
+
 
 

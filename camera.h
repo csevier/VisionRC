@@ -20,12 +20,15 @@ public:
     void Record();
     void StopRecording();
     double GetCameraFPS();
+    void Pause();
+    void Unpause();
+    bool IsVideoOver();
 
 private:
     void SampleColor(ImVec2 race_cam_min_loc, ImVec2 race_cam_max_loc);
     void UpdateColorSelectFrame();
-    int FrameAsTime(int frame);
-    std::string FormatTime(int time);
+    double FrameAsTime(int frame);
+    std::string FormatTime(double time);
     cv::VideoCapture mVideo;
     cv::VideoWriter mVideoOut;
     bool mRecord = false;

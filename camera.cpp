@@ -227,14 +227,14 @@ void Camera::StopRecording()
     mRecord = false;
 }
 
-int Camera::FrameAsTime(int frame)
+double Camera::FrameAsTime(int frame)
 {
     return frame * mCameraFPS;
 }
 
-std::string Camera::FormatTime(int time)
+std::string Camera::FormatTime(double time)
 {
-    std::chrono::milliseconds ms(time);
+    std::chrono::milliseconds ms((int)time);
     auto secs = std::chrono::duration_cast<std::chrono::seconds>(ms);
     ms -= std::chrono::duration_cast<std::chrono::milliseconds>(secs);
     auto mins = std::chrono::duration_cast<std::chrono::minutes>(secs);
@@ -249,4 +249,27 @@ std::string Camera::FormatTime(int time)
 double Camera::GetCameraFPS()
 {
     return mCameraFPS;
+}
+
+void Camera::Pause()
+{
+    mPause = true;
+}
+
+void Camera::Unpause()
+{
+    mPause = false;
+}
+
+bool Camera::IsVideoOver()
+{
+    if (mIsOfflineMode)
+    {
+        return mCurrentFrame >= mFrameCount;
+    }
+    else
+    {
+        return false;
+    }
+
 }

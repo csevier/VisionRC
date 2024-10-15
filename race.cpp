@@ -248,6 +248,11 @@ void Race::Update(Camera& raceCamera)
 {
     if(GetRaceStatus() == RaceStatus::RUNNING)
     {
+        if (raceCamera.IsVideoOver())
+        {
+            EndRace();
+        }
+        raceCamera.Unpause();
         mCurrentTime = SDL_GetTicks() - mRaceStartedAt;
         if(mShouldRecordRace)
         {
@@ -261,6 +266,7 @@ void Race::Update(Camera& raceCamera)
     if(GetRaceStatus() == RaceStatus::ENDED)
     {
         raceCamera.StopRecording();
+        raceCamera.Pause();
     }
     for(auto& racer : mRacers)
     {
