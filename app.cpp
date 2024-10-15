@@ -104,12 +104,14 @@ int App::Run()
     unsigned int a = 0;
     unsigned int b = 0;
     double delta = 0;
+    double desiredFPS = 30;
     while (!done)
     {
         a = SDL_GetTicks();
         delta = a - b;
-        if (delta > 1000 / race_camera.GetCameraFPS())
+        if (delta > 1000 / desiredFPS )
         {
+            desiredFPS = race_camera.GetCameraFPS();
             b = a;
             // Poll and handle events (inputs, window resize, etc.)
             // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
