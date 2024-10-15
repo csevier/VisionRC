@@ -6,11 +6,13 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/objdetect.hpp>
 #include <opencv2/opencv.hpp>
+#include <fstream>
 #include <imgui.h>
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
 #include "camera.h"
 #include "race.h"
+
 
 using namespace std;
 
@@ -97,8 +99,6 @@ int App::Run()
     //ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
     std::unique_ptr<Camera> race_camera = nullptr;
-    //Camera race_camera = Camera(mRenderer,0);
-    //Camera race_camera = Camera(mRenderer, "race_mini.mp4");
 
     // Main loop
     bool done = false;
@@ -152,15 +152,26 @@ int App::Run()
             }
             else
             {
+                static char str0[255] = "";
+                static std::string message;
                 ImGui::Begin("Select Race Camera Source");
                 if(ImGui::Button("Live From USB Camera"))
                 {
                     race_camera = std::make_unique<Camera>(mRenderer, 0);
                 }
-                ImGui::SameLine();
+                ImGui::InputText("Race Video File", str0, IM_ARRAYSIZE(str0));
+                ifstream f(str0);
+                if(!f.good())
+                {
+                    message = "File does not exist.";
+                    ImGui::TextColored(ImVec4(1,0,0,1), "%s", message.c_str());
+                }
                 if(ImGui::Button("Offline Video"))
                 {
-                    race_camera = std::make_unique<Camera>(mRenderer, "race_mini.mp4");
+                    if(f.good())
+                    {
+                       race_camera = std::make_unique<Camera>(mRenderer, str0);
+                    }
                 }
                 //ImGui::SameLine();
                 // if(ImGui::Button("Live From IP Camera"))
@@ -173,8 +184,6 @@ int App::Run()
             // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
             if (show_demo_window)
                 ImGui::ShowDemoWindow(&show_demo_window);
-
-
 
             // Rendering
             ImGui::Render();

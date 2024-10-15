@@ -18,6 +18,8 @@ Allow resolution adjustment.
 Make video export dialogue.
 Make race report a dialogue
 
+NEED FILE DIALOGUES!!!
+
 
 Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
 =============
