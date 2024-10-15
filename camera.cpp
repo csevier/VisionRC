@@ -14,6 +14,7 @@ Camera::Camera(SDL_Renderer* renderer, std::string filenameOrIp)
     mVideo.set(cv::CAP_PROP_BRIGHTNESS, 128);
     mVideo.set(cv::CAP_PROP_AUTO_EXPOSURE, 1);
     mFrameCount = mVideo.get(cv::CAP_PROP_FRAME_COUNT);
+    mCameraFPS = mVideo.get(cv::CAP_PROP_FPS);
 
     mMasks["main_hsv"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["main_bgr"] =  std::make_unique<CameraFrame>(renderer);
@@ -33,6 +34,7 @@ Camera::Camera(SDL_Renderer* renderer, int id)
     mVideo.set(cv::CAP_PROP_AUTO_EXPOSURE, 1);
     mExposure = mVideo.get(cv::CAP_PROP_EXPOSURE);
     mBrightness = mVideo.get(cv::CAP_PROP_BRIGHTNESS);
+    mCameraFPS = mVideo.get(cv::CAP_PROP_FPS);
     mMasks["main_hsv"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["main_bgr"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["select_color"] =  std::make_unique<CameraFrame>(renderer);
@@ -154,7 +156,7 @@ void Camera::Draw()
             NextFrame();
             mPause = true;
         }
-        if (ImGui::SliderInt("Frame Position", &mCurrentFrame, 0, mFrameCount))
+        if (ImGui::SliderInt("Time", &mCurrentFrame, 0, mFrameCount, FormatTime(FrameAsTime(mCurrentFrame)).c_str()))
         {
             mPause = false;
             mVideo.set(cv::CAP_PROP_POS_FRAMES, mCurrentFrame -2);
@@ -163,7 +165,7 @@ void Camera::Draw()
         }
 
         mCurrentFrame = (int)mVideo.get(cv::CAP_PROP_POS_FRAMES);
-        std::string frame_pos_label = "Frames: " + std::to_string(mCurrentFrame) + "/" + std::to_string(mFrameCount);
+        std::string frame_pos_label = FormatTime(FrameAsTime(mCurrentFrame)) + " / " + FormatTime(FrameAsTime(mFrameCount));
         ImGui::SameLine();
         ImGui::Text(frame_pos_label.c_str());
     }
@@ -223,4 +225,28 @@ void Camera::Record()
 void Camera::StopRecording()
 {
     mRecord = false;
+}
+
+int Camera::FrameAsTime(int frame)
+{
+    return frame * mCameraFPS;
+}
+
+std::string Camera::FormatTime(int time)
+{
+    std::chrono::milliseconds ms(time);
+    auto secs = std::chrono::duration_cast<std::chrono::seconds>(ms);
+    ms -= std::chrono::duration_cast<std::chrono::milliseconds>(secs);
+    auto mins = std::chrono::duration_cast<std::chrono::minutes>(secs);
+    secs -= std::chrono::duration_cast<std::chrono::seconds>(mins);
+    auto hour = std::chrono::duration_cast<std::chrono::hours>(mins);
+    mins -= std::chrono::duration_cast<std::chrono::minutes>(hour);
+    std::stringstream out;
+    out << mins.count() << ":" << secs.count() << ":" << ms.count();
+    return out.str();
+}
+
+double Camera::GetCameraFPS()
+{
+    return mCameraFPS;
 }

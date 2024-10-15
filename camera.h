@@ -19,10 +19,13 @@ public:
     void Draw();
     void Record();
     void StopRecording();
+    double GetCameraFPS();
 
 private:
     void SampleColor(ImVec2 race_cam_min_loc, ImVec2 race_cam_max_loc);
     void UpdateColorSelectFrame();
+    int FrameAsTime(int frame);
+    std::string FormatTime(int time);
     cv::VideoCapture mVideo;
     cv::VideoWriter mVideoOut;
     bool mRecord = false;
@@ -38,6 +41,7 @@ private:
     bool mPause = false;
     int mFrameCount = 0;
     int mCurrentFrame = 0;
+    double mCameraFPS = 0;
 };
 
 #endif // CAMERA_H
