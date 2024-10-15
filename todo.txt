@@ -11,9 +11,18 @@ Mask recordings so you can error correct.
 Allow post analysis of recorded race for error correct.
 Allow editable track times for error correct.
 Racer list export / import so when cars are used between app runs its easier to get started.
-Text to speech announcements
+Speech announcements for
+    - Race started
+    - Race Ending
+    - Race Ended
+    - Beep for lap.
 Race Durations with state for racers to finish after the bell.
 Allow resolution adjustment.
+Make video export dialogue.
+Make race report a dialogue
+Show racer positions.
+Add racer positions to exported race results.
+
 
 
 Bugs
@@ -23,4 +32,5 @@ More error handling in general, were very happy path right now.
 Dont usem v4l2 camera backend, needs to be cross plat.
 App crashes when more then 2 check in cars have multiple overlaps. Fix it.
 Dont assume resolutions!
+
 

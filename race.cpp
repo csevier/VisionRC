@@ -5,6 +5,21 @@
 #include <fstream>
 #include <ostream>
 
+
+bool ComparRacers(Racer racer1, Racer racer2)
+{
+    if(racer1.GetLapTimes().empty()||racer1.GetLapTimes().empty())
+    {
+        return racer1.StartedAt() < racer2.StartedAt();
+    }
+
+    if(racer1.GetTotalLaps() == racer2.GetTotalLaps())
+    {
+        return racer1.GetTotalTime() < racer2.GetTotalTime();
+    }
+    return racer1.GetTotalLaps() > racer2.GetTotalLaps();
+}
+
 Race CURRENT_RACE;
 
 Race::Race()
@@ -93,6 +108,20 @@ void Race::Draw()
                 ImGui::EndTabItem();
             }
         }
+        if(ImGui::BeginTabItem("Positions"))
+        {
+            std::vector<Racer> racerPositions = GetRacePositions();
+            for(int i = 0; i < racerPositions.size(); i++)
+            {
+
+                std::string label = std::to_string(i + 1) + ": ";
+                ImGui::LabelText(racerPositions[i].GetName().c_str(), label.c_str());
+                ImGui::SameLine();
+                std::string totals = std::to_string(racerPositions[i].GetTotalLaps()) + "/"+ FormatTime(racerPositions[i].GetTotalTime());
+                ImGui::Text(totals.c_str());
+            }
+            ImGui::EndTabItem();
+        }
         ImGui::EndTabBar();
     }
     ImGui::End();
@@ -119,8 +148,8 @@ void Race::Draw()
             racer.second.SetUpperColor(racer.second.GetUpperColorHSV1().x *255, racer.second.GetUpperColorHSV1().y *255 ,racer.second.GetUpperColorHSV1().z *255);
         }
 
-
-        ImGui::InputTextMultiline("Notes (1024 characters)", racer.second.GetNotes(), 1024);
+        std::string notesLabel = racer.second.GetName() + " Notes (1024 characters)";
+        ImGui::InputTextMultiline(notesLabel.c_str(), racer.second.GetNotes(), 1024);
 
         if(GetRaceStatus() == RaceStatus::CHECKING_IN)
         {
@@ -138,8 +167,6 @@ void Race::Draw()
                 ImGui::TextColored(ImVec4(1,0,0,1), "WARNING RACER OVERLAP DETECTED WITH: ");
                 ImGui::SameLine();
                 std::string names;
-
-
 
                 for(Racer overlap : racer.second.GetOverlapping())
                 {
@@ -284,6 +311,14 @@ void Race::ExportRace()
 {
     std::ofstream out("race.txt");
     out << "Race Duration: " << FormatTime(mCurrentTime) << std::endl << std::endl;
+    out << "Race Results: " << std::endl;
+    std::vector<Racer> racerPositions = GetRacePositions();
+    for(int i = 0; i < racerPositions.size(); i++)
+    {
+        std::string positionDetails = std::to_string(i + 1) + ": " + racerPositions[i].GetName() + " " + std::to_string(racerPositions[i].GetTotalLaps()) + "/"+ FormatTime(racerPositions[i].GetTotalTime());
+        out << positionDetails << std::endl;
+    }
+    out << std::endl << std::endl;
     for(auto &racer : mRacers)
     {
         out << racer.second.GetName() << std::endl;
@@ -303,3 +338,16 @@ void Race::ExportRace()
     }
     out.close();
 }
+
+std::vector<Racer> Race::GetRacePositions()
+{
+    std::vector<Racer> racers;
+    for(auto racer: mRacers)
+    {
+        racers.push_back(racer.second);
+    }
+    std::sort(racers.begin(), racers.end(),ComparRacers);
+    return racers;
+}
+
+

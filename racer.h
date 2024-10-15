@@ -35,6 +35,8 @@ public:
     void SetOverlapping(std::vector<Racer> racers);
     void ClearOverlaps();
     char* GetNotes();
+    int GetTotalLaps();
+    Uint32 GetTotalTime();
 
 private:
     bool mHasCheckedIn = false;

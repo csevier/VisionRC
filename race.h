@@ -29,6 +29,7 @@ public:
     void EndRace();
     void Reset();
     void ExportRace();
+    std::vector<Racer> GetRacePositions();
 
 private:
     std::map<std::string, Racer> mRacers;

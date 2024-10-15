@@ -159,3 +159,19 @@ char* Racer::GetNotes()
 {
     return mNotes;
 }
+
+int Racer::GetTotalLaps()
+{
+    return mLaptimes.size();
+}
+
+Uint32 Racer::GetTotalTime()
+{
+    Uint32 totalTime =0;
+    for (auto& n : mLaptimes)
+    {
+        totalTime += n;
+    }
+    return totalTime;
+
+}
