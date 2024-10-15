@@ -11,6 +11,7 @@ class Camera
 {
 public:
     Camera(SDL_Renderer* renderer, int id = 0);
+    Camera(SDL_Renderer* renderer, std::string filenameOrIp);
     ~Camera();
     void NextFrame();
     std::chrono::time_point<std::chrono::system_clock>& GetFrameTimeStamp();
@@ -33,6 +34,10 @@ private:
     bool mUserIsAssigningRacerColor = false;
     int mExposure = 0;
     int mBrightness =0;
+    bool mIsOfflineMode = false;
+    bool mPause = false;
+    int mFrameCount = 0;
+    int mCurrentFrame = 0;
 };
 
 #endif // CAMERA_H

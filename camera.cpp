@@ -3,6 +3,23 @@
 #include "imgui.h"
 #include "race.h"
 
+Camera::Camera(SDL_Renderer* renderer, std::string filenameOrIp)
+{
+    mRenderer = renderer;
+    int codec = cv::VideoWriter::fourcc('m','p', '4', 'v');
+    mVideo = cv::VideoCapture(filenameOrIp);
+    mVideoOut = cv::VideoWriter("race.mp4",codec,30, cv::Size2i(640,480));
+    mVideo.set(cv::CAP_PROP_FRAME_WIDTH, 640);
+    mVideo.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
+    mVideo.set(cv::CAP_PROP_BRIGHTNESS, 128);
+    mVideo.set(cv::CAP_PROP_AUTO_EXPOSURE, 1);
+    mFrameCount = mVideo.get(cv::CAP_PROP_FRAME_COUNT);
+
+    mMasks["main_hsv"] =  std::make_unique<CameraFrame>(renderer);
+    mMasks["main_bgr"] =  std::make_unique<CameraFrame>(renderer);
+    mMasks["select_color"] =  std::make_unique<CameraFrame>(renderer);
+    mIsOfflineMode = true;
+}
 
 Camera::Camera(SDL_Renderer* renderer, int id)
 {
@@ -19,10 +36,13 @@ Camera::Camera(SDL_Renderer* renderer, int id)
     mMasks["main_hsv"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["main_bgr"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["select_color"] =  std::make_unique<CameraFrame>(renderer);
+    mIsOfflineMode = false;
 }
 
 void Camera::NextFrame()
 {
+    if (mPause) return;
+    if (mIsOfflineMode && mCurrentFrame == mFrameCount) return;
     cv::Mat currentFrameBGR;
     cv::Mat currentFrameHSV;
     mVideo >> currentFrameBGR;;
@@ -97,14 +117,57 @@ void Camera::Draw()
     {
          SampleColor(race_cam_min_loc, race_cam_size);
     }
-    if(ImGui::SliderInt("Exposure", &mExposure, 0, 1000))
+    if (!mIsOfflineMode)
     {
-        mVideo.set(cv::CAP_PROP_EXPOSURE, mExposure);
+        if(ImGui::SliderInt("Exposure", &mExposure, 0, 1000))
+        {
+            mVideo.set(cv::CAP_PROP_EXPOSURE, mExposure);
+        }
+        if (ImGui::SliderInt("Brightness", &mBrightness, 0, 1000))
+        {
+            mVideo.set(cv::CAP_PROP_BRIGHTNESS, mBrightness);
+        }
     }
-    if (ImGui::SliderInt("Brightness", &mBrightness, 0, 1000))
+    else
     {
-        mVideo.set(cv::CAP_PROP_BRIGHTNESS, mBrightness);
+        if(ImGui::Button("Last Frame"))
+        {
+            mVideo.set(cv::CAP_PROP_POS_FRAMES, mCurrentFrame -2);
+            mPause = false;
+            NextFrame();
+            mPause = true;
+        }
+        ImGui::SameLine();
+        if(ImGui::Button("Pause"))
+        {
+            mPause = true;
+        }
+        ImGui::SameLine();
+        if(ImGui::Button("Play"))
+        {
+            mPause = false;
+        }
+        ImGui::SameLine();
+        if(ImGui::Button("Next Frame"))
+        {
+            mPause = false;
+            NextFrame();
+            mPause = true;
+        }
+        if (ImGui::SliderInt("Frame Position", &mCurrentFrame, 0, mFrameCount))
+        {
+            mPause = false;
+            mVideo.set(cv::CAP_PROP_POS_FRAMES, mCurrentFrame -2);
+            NextFrame();
+            mPause = true;
+        }
+
+        mCurrentFrame = (int)mVideo.get(cv::CAP_PROP_POS_FRAMES);
+        std::string frame_pos_label = "Frames: " + std::to_string(mCurrentFrame) + "/" + std::to_string(mFrameCount);
+        ImGui::SameLine();
+        ImGui::Text(frame_pos_label.c_str());
     }
+
     ImGui::End();
     ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
     ImGui::Begin("Masks");
