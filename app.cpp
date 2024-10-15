@@ -159,6 +159,11 @@ int App::Run()
                 {
                     race_camera = std::make_unique<Camera>(mRenderer, 0);
                 }
+                ImGui::SameLine();
+                if(ImGui::Button("Live From IP Camera"))
+                {
+                    //race_camera = std::make_unique<Camera>(mRenderer, "rtsp://<ip>:port/etc");
+                }
                 ImGui::InputText("Race Video File", str0, IM_ARRAYSIZE(str0));
                 ifstream f(str0);
                 if(!f.good())
@@ -173,11 +178,7 @@ int App::Run()
                        race_camera = std::make_unique<Camera>(mRenderer, str0);
                     }
                 }
-                //ImGui::SameLine();
-                // if(ImGui::Button("Live From IP Camera"))
-                // {
-                //     //race_camera = std::make_unique<Camera>(mRenderer, "rtsp://<ip>:port/etc");
-                // }
+
                 ImGui::End();
                 // select cam type
             }
