@@ -333,7 +333,7 @@ void Race::ExportRace()
         out << "============================" << std::endl;
         out << "Notes:" << std::endl;
         out << "    " << racer.second.GetNotes() << std::endl << std::endl;
-        out << "Fastest Lap: " << FormatTime(racer.second.FastestLapTime()) << std::endl << std::endl;
+        out << "Fastest Lap: " << FormatTime(racer.second.FastestLapTime()) << std::endl;
         out << "Average Lap: " << FormatTime(racer.second.AverageLapTime()) << std::endl << std::endl;
         out << "Laps:" << std::endl;
         out << "    " << racer.second.GetName() + " Started at: " + FormatTime(racer.second.StartedAt()) << std::endl;
