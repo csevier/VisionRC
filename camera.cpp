@@ -229,12 +229,12 @@ void Camera::StopRecording()
 
 double Camera::FrameAsTime(int frame)
 {
-    return frame * mCameraFPS;
+    return frame / mCameraFPS;
 }
 
 std::string Camera::FormatTime(double time)
 {
-    std::chrono::milliseconds ms((int)time);
+    std::chrono::milliseconds ms((int)time *1000);
     auto secs = std::chrono::duration_cast<std::chrono::seconds>(ms);
     ms -= std::chrono::duration_cast<std::chrono::milliseconds>(secs);
     auto mins = std::chrono::duration_cast<std::chrono::minutes>(secs);
