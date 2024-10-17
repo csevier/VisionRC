@@ -24,6 +24,10 @@ Race CURRENT_RACE;
 
 Race::Race()
 {
+    mRecordingDialogue.SetTitle("Offline Recording");
+    mRecordingDialogue.SetTypeFilters({ ".mp4"});
+    mExportDialogue.SetTitle("Saving Race Results");
+    mExportDialogue.SetTypeFilters({ ".txt"});
     mStatus = RaceStatus::NOT_STARTED;
 }
 
@@ -46,7 +50,42 @@ void Race::Draw()
     {
         mRacerClockInDelay = delayInSeconds *1000;
     }
-    ImGui::Checkbox("Record Race", &mShouldRecordRace);
+    if(ImGui::Button("Save Video To"))
+    {
+        mRecordingDialogue.Open();
+    }
+    if (!mSelectRecordingLocation.empty())
+    {
+        ImGui::SameLine();
+        if(ImGui::Button("Dont Record"))
+        {
+            mSelectRecordingLocation.clear();
+        }
+    }
+
+    if(mRecordingDialogue.HasSelected())
+    {
+        mSelectRecordingLocation = mRecordingDialogue.GetSelected().string();
+        std::filesystem::path file = mSelectRecordingLocation;
+        if (!file.has_extension() || file.extension() != ".mp4")
+        {
+            mSelectRecordingLocation += ".mp4";
+        }
+        if (!std::filesystem::exists(mSelectRecordingLocation))
+        {
+            std::ofstream { mSelectRecordingLocation }; // create it.
+        }
+        mRecordingDialogue.ClearSelected();
+    }
+    if(!mSelectRecordingLocation.empty())
+    {
+        ImGui::Text(mSelectRecordingLocation.c_str());
+    }
+    else
+    {
+        ImGui::Text("Not Recording - Select Video To Record.");
+    }
+    mRecordingDialogue.Display();
     std::string statusText;
     switch (mStatus)
     {
@@ -79,11 +118,22 @@ void Race::Draw()
         }
         if (ImGui::Button("Export Results"))
         {
-            ExportRace();
+            mExportDialogue.Open();
         }
         break;
     }
-
+    if(mExportDialogue.HasSelected())
+    {
+         std::string  exportLocation = mExportDialogue.GetSelected().string();
+        std::filesystem::path file = exportLocation;
+        if (!file.has_extension() || file.extension() != ".txt")
+        {
+            exportLocation += ".txt";
+        }
+        ExportRace(exportLocation);
+        mExportDialogue.ClearSelected();
+    }
+    mExportDialogue.Display();
     ImGui::LabelText(FormatTime(mCurrentTime).c_str(), "Race Timer: ");
     ImGui::End();
 
@@ -254,9 +304,9 @@ void Race::Update(Camera& raceCamera)
         }
         raceCamera.Unpause();
         mCurrentTime = SDL_GetTicks() - mRaceStartedAt;
-        if(mShouldRecordRace)
+        if(!mSelectRecordingLocation.empty())
         {
-            raceCamera.Record();
+            raceCamera.Record(mSelectRecordingLocation);
         }
         else
         {
@@ -321,9 +371,9 @@ std::string Race::FormatTime(Uint32 time)
     return out.str();
 }
 
-void Race::ExportRace()
+void Race::ExportRace(std::string& location)
 {
-    std::ofstream out("race.txt");
+    std::ofstream out(location);
     out << "Race Duration: " << FormatTime(mCurrentTime) << std::endl << std::endl;
     out << "Race Results: " << std::endl;
     std::vector<Racer> racerPositions = GetRacePositions();

@@ -37,6 +37,7 @@ add_library(imgui
   ${CMAKE_SOURCE_DIR}/third_party/imgui/imstb_rectpack.h
   ${CMAKE_SOURCE_DIR}/third_party/imgui/imstb_textedit.h
   ${CMAKE_SOURCE_DIR}/third_party/imgui/imstb_truetype.h
+  ${CMAKE_SOURCE_DIR}/third_party/imgui/imfilebrowser.h
   ${CMAKE_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_sdl2.h
   ${CMAKE_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_sdl2.cpp
   ${CMAKE_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_sdlrenderer2.h

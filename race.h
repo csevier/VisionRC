@@ -5,6 +5,8 @@
 #include "camera.h"
 #include <map>
 #include <SDL2/SDL.h>
+#include <imgui.h>
+#include <imfilebrowser.h>
 
 enum RaceStatus
 {
@@ -28,7 +30,7 @@ public:
     void StartRace();
     void EndRace();
     void Reset();
-    void ExportRace();
+    void ExportRace(std::string& location);
     std::vector<Racer> GetRacePositions();
 
 private:
@@ -39,7 +41,9 @@ private:
     Uint32 mRaceStartedAt =0;
     Uint32 mRacerClockInDelay = 3000; // milliseconds.
     std::string FormatTime(Uint32 time);
-    bool mShouldRecordRace;
+    ImGui::FileBrowser mRecordingDialogue{ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_EnterNewFilename | ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_CreateNewDir};
+    ImGui::FileBrowser mExportDialogue{ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_EnterNewFilename | ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_CreateNewDir};
+    std::string mSelectRecordingLocation;
 };
 
 extern Race CURRENT_RACE;

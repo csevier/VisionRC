@@ -177,7 +177,11 @@ Uint32 Racer::GetTotalTime()
 
 Uint32 Racer::AverageLapTime()
 {
-   return GetTotalTime() / GetTotalLaps();
+    if(GetTotalLaps() == 0)
+    {
+        return 0;
+    }
+    return GetTotalTime() / GetTotalLaps();
 }
 
 Uint32 Racer::FastestLapTime()

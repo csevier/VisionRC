@@ -6,8 +6,8 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/objdetect.hpp>
 #include <opencv2/opencv.hpp>
-#include <fstream>
 #include <imgui.h>
+#include <imfilebrowser.h>
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
 #include "camera.h"
@@ -106,6 +106,9 @@ int App::Run()
     unsigned int b = 0;
     double delta = 0;
     double desiredFPS = 30;
+    ImGui::FileBrowser fileDialog;
+    fileDialog.SetTitle("Offline Race Source");
+    fileDialog.SetTypeFilters({ ".mp4"});
     while (!done)
     {
         a = SDL_GetTicks();
@@ -164,23 +167,19 @@ int App::Run()
                 {
                     //race_camera = std::make_unique<Camera>(mRenderer, "rtsp://<ip>:port/etc");
                 }
-                ImGui::InputText("Race Video File", str0, IM_ARRAYSIZE(str0));
-                ifstream f(str0);
-                if(!f.good())
-                {
-                    message = "File does not exist.";
-                    ImGui::TextColored(ImVec4(1,0,0,1), "%s", message.c_str());
-                }
+                ImGui::SameLine();
                 if(ImGui::Button("Offline Video"))
                 {
-                    if(f.good())
-                    {
-                       race_camera = std::make_unique<Camera>(mRenderer, str0);
-                    }
+                    fileDialog.Open();
                 }
-
                 ImGui::End();
                 // select cam type
+            }
+            fileDialog.Display();
+            if(fileDialog.HasSelected())
+            {
+                race_camera = std::make_unique<Camera>(mRenderer, fileDialog.GetSelected().string());
+                fileDialog.ClearSelected();
             }
             // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
             if (show_demo_window)

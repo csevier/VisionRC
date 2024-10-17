@@ -6,16 +6,13 @@
 Camera::Camera(SDL_Renderer* renderer, std::string filenameOrIp)
 {
     mRenderer = renderer;
-    int codec = cv::VideoWriter::fourcc('m','p', '4', 'v');
     mVideo = cv::VideoCapture(filenameOrIp);
-    mVideoOut = cv::VideoWriter("race.mp4",codec,30, cv::Size2i(640,480));
     mVideo.set(cv::CAP_PROP_FRAME_WIDTH, 640);
     mVideo.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
     mVideo.set(cv::CAP_PROP_BRIGHTNESS, 128);
     mVideo.set(cv::CAP_PROP_AUTO_EXPOSURE, 1);
     mFrameCount = mVideo.get(cv::CAP_PROP_FRAME_COUNT);
     mCameraFPS = mVideo.get(cv::CAP_PROP_FPS);
-
     mMasks["main_hsv"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["main_bgr"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["select_color"] =  std::make_unique<CameraFrame>(renderer);
@@ -26,8 +23,6 @@ Camera::Camera(SDL_Renderer* renderer, int id)
 {
     mRenderer = renderer;
     mVideo = cv::VideoCapture(id, cv::CAP_V4L2);
-    int codec = cv::VideoWriter::fourcc('m','p', '4', 'v');
-    mVideoOut = cv::VideoWriter("race.mp4",codec,30, cv::Size2i(640,480));
     mVideo.set(cv::CAP_PROP_FRAME_WIDTH, 640);
     mVideo.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
     mVideo.set(cv::CAP_PROP_BRIGHTNESS, 128);
@@ -61,7 +56,7 @@ void Camera::NextFrame()
     mMasks["main_bgr"]->SetMatrix(currentFrameBGR);
     mMasks["main_hsv"]->SetMatrix(currentFrameHSV);
     UpdateColorSelectFrame();
-    if(mRecord)
+    if(mRecord && mVideoOut.isOpened())
     {
        mVideoOut.write(currentFrameBGR);
     }
@@ -225,13 +220,20 @@ void Camera::UpdateColorSelectFrame()
     mMasks["select_color"]->SetMatrix(out);
 }
 
-void Camera::Record()
+void Camera::Record(std::string& location)
 {
+    if(!mVideoOut.isOpened())
+    {
+        int codec = cv::VideoWriter::fourcc('m','p', '4', 'v');
+        mVideoOut = cv::VideoWriter(location,codec,30, cv::Size2i(640,480));
+    }
+
     mRecord = true;
 }
 
 void Camera::StopRecording()
 {
+    mVideoOut.release();
     mRecord = false;
 }
 
