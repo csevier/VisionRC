@@ -177,18 +177,44 @@ int App::Run()
                 ImGui::SameLine();
                 if(ImGui::Button("Live From IP Camera"))
                 {
-                    try
+                    ImGui::OpenPopup("IpCam");
+
+                }
+
+                if (ImGui::BeginPopupModal("IpCam"))
+                {
+                    ImGui::Text("Please put in a rtsp url.");
+                    ImGui::Separator();
+
+                    static char rtspUrl[255] = "";
+                    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+                    ImGui::InputText("URL", rtspUrl, IM_ARRAYSIZE(rtspUrl));
+                    ImGui::PopStyleVar();
+
+                    if (ImGui::Button("OK", ImVec2(120, 0)))
                     {
-                        race_camera = std::make_unique<Camera>(mRenderer, "rtsp://localhost:554");
-                        errorMessage.clear();
+                        try
+                        {
+                            race_camera = std::make_unique<Camera>(mRenderer, rtspUrl);
+                            memset(rtspUrl, 0, sizeof rtspUrl);
+                            errorMessage.clear();
+                            ImGui::CloseCurrentPopup();
+                        }
+                        catch(std::exception ex)
+                        {
+                            errorMessage = "No ip camera found, are you sure url is correct?";
+                        }
+                        ImGui::CloseCurrentPopup();
                     }
-                    catch(std::exception ex)
+                    ImGui::SameLine();
+                    if (ImGui::Button("Cancel", ImVec2(120, 0)))
                     {
-                        errorMessage = "No ip camera found, are you sure url is correct?";
+                        ImGui::CloseCurrentPopup();
                     }
+                    ImGui::EndPopup();
                 }
                 ImGui::SameLine();
-                if(ImGui::Button("Offline Video"))
+                if(ImGui::Button("Offline From Video"))
                 {
                     fileDialog.Open();
                 }
