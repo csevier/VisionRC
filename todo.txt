@@ -1,7 +1,8 @@
 Features for v1
 =============
-Multiple Cam sources - Allow user to choose a cam source from any available, either file or usb or remote rtsp stream.
+
 Agents - Need mobile app to serve as an agent for cameras in both live and offline mode.
+     - Test rstp, does nothign at the moment.
 Post race visualization graphs.
 Pre-configured layouts for selection.
 Mask recordings so you can error correct.
@@ -15,10 +16,6 @@ Speech announcements for
     - Beep for lap.
 Race Durations with state for racers to finish after the bell.
 Allow resolution adjustment.
-Make video export dialogue.
-Make race report a dialogue
-
-NEED FILE DIALOGUES!!!
 
 
 Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
@@ -30,7 +27,6 @@ App crashes when more then 2 check in cars have multiple overlaps. Fix it.
 Dont assume resolutions!
 Video playback in offline mode is suppose to match framerate but is slower then actual time.?!?!?s
     -- Okay but the times were DEAD accurate, i wonder if its my own timing math on the video and not on frames.
-Video stream should not be opened on cam open instead frames should be written only when asked and exported when asked. (or jsut do the fucking dialogue)
 
 
 Features for v2
