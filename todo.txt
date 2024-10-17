@@ -4,7 +4,8 @@ Agents - Need mobile app to serve as an agent for cameras in both live and offli
      - Test rstp, does nothign at the moment.
      - Needs to be able to put in ip
 Post race visualization graphs.
-Pre-configured layouts for selection.
+Pre-configured layouts for selection. Well better layouting in general at start.
+Allow users to get back to source select screen.
 Allow editable track times for error correct.
 Racer list export / import so when cars are used between app runs its easier to get started.
 Speech announcements for
