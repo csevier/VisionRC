@@ -3,6 +3,7 @@ Features for v1
 
 Agents - Need mobile app to serve as an agent for cameras in both live and offline mode.
      - Test rstp, does nothign at the moment.
+     - Needs to be able to put in ip
 Post race visualization graphs.
 Pre-configured layouts for selection.
 Mask recordings so you can error correct.
@@ -16,7 +17,7 @@ Speech announcements for
     - Beep for lap.
 Race Durations with state for racers to finish after the bell.
 Allow resolution adjustment.
-
+Make sure you can select from any usb cam not just the first.
 
 Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
 =============
