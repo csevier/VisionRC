@@ -85,6 +85,13 @@ void Race::Draw()
     {
         ImGui::Text("Not Recording - Select Video To Record.");
     }
+    if (ImGui::BeginItemTooltip())
+    {
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted(mSelectRecordingLocation.c_str());
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
     mRecordingDialogue.Display();
     std::string statusText;
     switch (mStatus)
