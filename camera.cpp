@@ -43,8 +43,16 @@ Camera::Camera(SDL_Renderer* renderer, int id)
 
 void Camera::NextFrame()
 {
-    if (mIsOfflineMode && mPause ) return;
-    if (mIsOfflineMode && mCurrentFrame == mFrameCount) return;
+    if (mIsOfflineMode && mPause )
+    {
+        UpdateColorSelectFrame();
+        return;
+    }
+    if (mIsOfflineMode && mCurrentFrame == mFrameCount)
+    {
+        UpdateColorSelectFrame();
+        return;
+    }
     cv::Mat currentFrameBGR;
     cv::Mat currentFrameHSV;
     mVideo >> currentFrameBGR;;
