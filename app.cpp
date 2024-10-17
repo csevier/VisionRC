@@ -107,6 +107,7 @@ int App::Run()
     double delta = 0;
     double desiredFPS = 30;
     ImGui::FileBrowser fileDialog;
+    std::string  errorMessage;
     fileDialog.SetTitle("Offline Race Source");
     fileDialog.SetTypeFilters({ ".mp4"});
     while (!done)
@@ -155,22 +156,45 @@ int App::Run()
             }
             else
             {
-                static char str0[255] = "";
-                static std::string message;
                 ImGui::Begin("Select Race Camera Source");
                 if(ImGui::Button("Live From USB Camera"))
                 {
-                    race_camera = std::make_unique<Camera>(mRenderer, 0);
+                    for (int i = 0; i < 11; i++)
+                    {
+                        try
+                        {
+                            race_camera = std::make_unique<Camera>(mRenderer, 0);
+                            errorMessage.clear();
+                            break;
+                        }
+                        catch(std::exception ex)
+                        {
+                            errorMessage = "No usb camera found, is one plugged in and not already in use?";
+                        }
+                    }
+
                 }
                 ImGui::SameLine();
                 if(ImGui::Button("Live From IP Camera"))
                 {
-                    //race_camera = std::make_unique<Camera>(mRenderer, "rtsp://<ip>:port/etc");
+                    try
+                    {
+                        race_camera = std::make_unique<Camera>(mRenderer, "rtsp://localhost:554");
+                        errorMessage.clear();
+                    }
+                    catch(std::exception ex)
+                    {
+                        errorMessage = "No ip camera found, are you sure url is correct?";
+                    }
                 }
                 ImGui::SameLine();
                 if(ImGui::Button("Offline Video"))
                 {
                     fileDialog.Open();
+                }
+                if(!errorMessage.empty())
+                {
+                    ImGui::TextColored(ImVec4(1,0,0,1), errorMessage.c_str());
                 }
                 ImGui::End();
                 // select cam type
@@ -178,7 +202,16 @@ int App::Run()
             fileDialog.Display();
             if(fileDialog.HasSelected())
             {
-                race_camera = std::make_unique<Camera>(mRenderer, fileDialog.GetSelected().string());
+                try
+                {
+                    race_camera = std::make_unique<Camera>(mRenderer, fileDialog.GetSelected().string());
+                    errorMessage.clear();
+                }
+                catch(std::exception ex)
+                {
+                    errorMessage = "Could not open file. Are you sure its valid mp4?";
+                }
+
                 fileDialog.ClearSelected();
             }
             // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).

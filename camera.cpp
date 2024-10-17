@@ -7,6 +7,10 @@ Camera::Camera(SDL_Renderer* renderer, std::string filenameOrIp)
 {
     mRenderer = renderer;
     mVideo = cv::VideoCapture(filenameOrIp);
+    if(!mVideo.isOpened())
+    {
+        throw std::exception();
+    }
     mVideo.set(cv::CAP_PROP_FRAME_WIDTH, 640);
     mVideo.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
     mVideo.set(cv::CAP_PROP_BRIGHTNESS, 128);
@@ -23,6 +27,10 @@ Camera::Camera(SDL_Renderer* renderer, int id)
 {
     mRenderer = renderer;
     mVideo = cv::VideoCapture(id, cv::CAP_V4L2);
+    if(!mVideo.isOpened())
+    {
+        throw std::exception();
+    }
     mVideo.set(cv::CAP_PROP_FRAME_WIDTH, 640);
     mVideo.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
     mVideo.set(cv::CAP_PROP_BRIGHTNESS, 128);
