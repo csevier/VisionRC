@@ -11,7 +11,7 @@ class Camera
 {
 public:
     Camera(SDL_Renderer* renderer, int id = 0);
-    Camera(SDL_Renderer* renderer, std::string filenameOrIp);
+    Camera(SDL_Renderer* renderer, std::string filenameOrIp, bool isOffline);
     ~Camera();
     void NextFrame();
     std::chrono::time_point<std::chrono::system_clock>& GetFrameTimeStamp();

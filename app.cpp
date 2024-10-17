@@ -195,7 +195,7 @@ int App::Run()
                     {
                         try
                         {
-                            race_camera = std::make_unique<Camera>(mRenderer, rtspUrl);
+                            race_camera = std::make_unique<Camera>(mRenderer, rtspUrl, false);
                             memset(rtspUrl, 0, sizeof rtspUrl);
                             errorMessage.clear();
                             ImGui::CloseCurrentPopup();
@@ -230,7 +230,7 @@ int App::Run()
             {
                 try
                 {
-                    race_camera = std::make_unique<Camera>(mRenderer, fileDialog.GetSelected().string());
+                    race_camera = std::make_unique<Camera>(mRenderer, fileDialog.GetSelected().string(), true);
                     errorMessage.clear();
                 }
                 catch(std::exception ex)

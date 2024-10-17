@@ -3,7 +3,7 @@
 #include "imgui.h"
 #include "race.h"
 
-Camera::Camera(SDL_Renderer* renderer, std::string filenameOrIp)
+Camera::Camera(SDL_Renderer* renderer, std::string filenameOrIp, bool isOffline)
 {
     mRenderer = renderer;
     mVideo = cv::VideoCapture(filenameOrIp);
@@ -20,7 +20,7 @@ Camera::Camera(SDL_Renderer* renderer, std::string filenameOrIp)
     mMasks["main_hsv"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["main_bgr"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["select_color"] =  std::make_unique<CameraFrame>(renderer);
-    mIsOfflineMode = true;
+    mIsOfflineMode = isOffline;
 }
 
 Camera::Camera(SDL_Renderer* renderer, int id)
@@ -178,7 +178,7 @@ void Camera::Draw()
         mCurrentFrame = (int)mVideo.get(cv::CAP_PROP_POS_FRAMES);
         std::string frame_pos_label = FormatTime(FrameAsTime(mCurrentFrame)) + " / " + FormatTime(FrameAsTime(mFrameCount));
         ImGui::SameLine();
-        ImGui::Text(frame_pos_label.c_str());
+        ImGui::Text("%s", frame_pos_label.c_str());
     }
 
     ImGui::End();

@@ -1,6 +1,5 @@
 Features for v1
 =============
-I dont have an ip cam to test, but code is done**
 Post race visualization graphs.
 Pre-configured layouts for selection. Well better layouting in general at start.
 Allow users to get back to source select screen.
@@ -21,6 +20,7 @@ App crashes when more then 2 check in cars have multiple overlaps. Fix it.
 Dont assume resolutions!
 Video playback in offline mode is suppose to match framerate but is slower then actual time.?!?!?s
     -- Okay but the times were DEAD accurate, i wonder if its my own timing math on the video and not on frames.
+Recording isnt working on remote camera?
 
 
 Features for v2
