@@ -46,8 +46,9 @@ void Race::RemoveRacer(std::string racerName)
     mRacers.erase(racerName);
 }
 
-void Race::Draw()
+bool Race::Draw()
 {
+    bool shouldResetToSource = false;
     ImGui::Begin("Race");
     int delayInSeconds  = mRacerClockInDelay / 1000;
     if(ImGui::SliderInt("Racer Delay", &delayInSeconds,0,100))
@@ -194,24 +195,35 @@ void Race::Draw()
         ImGui::EndTabBar();
     }
     ImGui::End();
-
-    ImGui::Begin("Racers");
-    if(mStatus == RaceStatus::NOT_STARTED)
+    if(ImGui::BeginMainMenuBar())
     {
-        if(ImGui::BeginMenu("File"))
+        if(ImGui::BeginMenu("Racers"))
         {
-
-            if(ImGui::MenuItem("Import Racer Colors"))
+            if(ImGui::MenuItem("Import Racer Colors", NULL, false, mStatus == RaceStatus::NOT_STARTED))
             {
                 mRacerColorImportDialogue.Open();
             }
-            if(ImGui::MenuItem("Export Racer Colors"))
+            if(ImGui::MenuItem("Export Racer Colors", NULL, false, mStatus == RaceStatus::NOT_STARTED))
             {
                 mRacerColorExportDialogue.Open();
             }
             ImGui::EndMenu();
         }
+        ImGui::EndMainMenuBar();
     }
+    if(ImGui::BeginMainMenuBar())
+    {
+        if(ImGui::BeginMenu("Source"))
+        {
+            if(ImGui::MenuItem("Return To Source Select", NULL, false, mStatus == RaceStatus::NOT_STARTED))
+            {
+               shouldResetToSource = true; // should tear down and return to source select.
+            }
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+    }
+    ImGui::Begin("Racers");
     if(mRacerColorExportDialogue.HasSelected())
     {
         std::string  exportLocation = mRacerColorExportDialogue.GetSelected().string();
@@ -299,6 +311,7 @@ void Race::Draw()
         AddRacer(newRacer);
     }
     ImGui::End();
+    return shouldResetToSource;
 }
 
 std::map<std::string, Racer>& Race::GetRacers()
