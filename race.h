@@ -31,6 +31,8 @@ public:
     void EndRace();
     void Reset();
     void ExportRace(std::string& location);
+    void ExportColors(std::string& location);
+    void ImportColors(std::string& location);
     std::vector<Racer> GetRacePositions();
 
 private:
@@ -43,6 +45,8 @@ private:
     std::string FormatTime(Uint32 time);
     ImGui::FileBrowser mRecordingDialogue{ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_EnterNewFilename | ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_CreateNewDir};
     ImGui::FileBrowser mExportDialogue{ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_EnterNewFilename | ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_CreateNewDir};
+    ImGui::FileBrowser mRacerColorExportDialogue{ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_EnterNewFilename | ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_CreateNewDir};
+    ImGui::FileBrowser mRacerColorImportDialogue;
     std::string mSelectRecordingLocation;
 };
 

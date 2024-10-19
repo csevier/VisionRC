@@ -4,7 +4,6 @@ Post race visualization graphs.
 Pre-configured layouts for selection. Well better layouting in general at start.
 Allow users to get back to source select screen.
 Allow editable track times for error correct.
-Racer list export / import so when cars are used between app runs its easier to get started.
 Speech announcements for
     - Race started
     - Race Ending

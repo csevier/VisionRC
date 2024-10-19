@@ -28,6 +28,10 @@ Race::Race()
     mRecordingDialogue.SetTypeFilters({ ".mp4"});
     mExportDialogue.SetTitle("Saving Race Results");
     mExportDialogue.SetTypeFilters({ ".txt"});
+    mRacerColorExportDialogue.SetTitle("Saving Racer Colors");
+    mRacerColorExportDialogue.SetTypeFilters({ ".txt"});
+    mRacerColorImportDialogue.SetTitle("Importing Racer Colors");
+    mRacerColorImportDialogue.SetTypeFilters({ ".txt"});
     mStatus = RaceStatus::NOT_STARTED;
 }
 
@@ -192,6 +196,41 @@ void Race::Draw()
     ImGui::End();
 
     ImGui::Begin("Racers");
+    if(mStatus == RaceStatus::NOT_STARTED)
+    {
+        if(ImGui::BeginMenu("File"))
+        {
+
+            if(ImGui::MenuItem("Import Racer Colors"))
+            {
+                mRacerColorImportDialogue.Open();
+            }
+            if(ImGui::MenuItem("Export Racer Colors"))
+            {
+                mRacerColorExportDialogue.Open();
+            }
+            ImGui::EndMenu();
+        }
+    }
+    if(mRacerColorExportDialogue.HasSelected())
+    {
+        std::string  exportLocation = mRacerColorExportDialogue.GetSelected().string();
+        std::filesystem::path file = exportLocation;
+        if (!file.has_extension() || file.extension() != ".txt")
+        {
+            exportLocation += ".txt";
+        }
+        ExportColors(exportLocation);
+        mRacerColorExportDialogue.ClearSelected();
+    }
+    if(mRacerColorImportDialogue.HasSelected())
+    {
+        std::string  importLocation = mRacerColorImportDialogue.GetSelected().string();
+        ImportColors(importLocation);
+        mRacerColorImportDialogue.ClearSelected();
+    }
+    mRacerColorExportDialogue.Display();
+    mRacerColorImportDialogue.Display();
     static char str0[128] = "";
     std::string racerNameToRemove;
     for (auto& racer : mRacers)
@@ -421,6 +460,53 @@ std::vector<Racer> Race::GetRacePositions()
     }
     std::sort(racers.begin(), racers.end(),ComparRacers);
     return racers;
+}
+
+void Race::ExportColors(std::string& location)
+{
+    std::ofstream out(location);
+    for(auto& racer: mRacers)
+    {
+        out << racer.second.GetName() << " ";
+        out << racer.second.GetColorHSV255().x<< " ";
+        out << racer.second.GetColorHSV255().y<< " ";
+        out << racer.second.GetColorHSV255().z<< " ";
+        out << racer.second.GetUpperColorHSV255().x<< " ";
+        out << racer.second.GetUpperColorHSV255().y<< " ";
+        out << racer.second.GetUpperColorHSV255().z<< " ";
+        out << racer.second.GetLowerColorHSV255().x<< " ";
+        out << racer.second.GetLowerColorHSV255().y<< " ";
+        out << racer.second.GetLowerColorHSV255().z<< " ";
+        out << std::endl;
+    }
+    out.close();
+}
+
+void Race::ImportColors(std::string& location)
+{
+    mRacers.clear();
+    std::ifstream in(location);
+    std::string instr;
+    std::string name;
+    std::string baseH;
+    std::string baseS;
+    std::string baseV;
+    std::string upperH;
+    std::string upperS;
+    std::string upperV;
+    std::string lowerH;
+    std::string lowerS;
+    std::string lowerV;
+    while(in >> name >> baseH >> baseS >> baseV >> upperH >> upperS >> upperV >> lowerH >> lowerS >> lowerV)
+    {
+        Racer racer;
+        racer.SetName(name);
+        racer.SetColor(std::stof(baseH),std::stof(baseS),std::stof(baseV));
+        racer.SetUpperColor(std::stof(upperH),std::stof(upperS),std::stof(upperV));
+        racer.SetLowerColor(std::stof(lowerH),std::stof(lowerS),std::stof(lowerV));
+        AddRacer(racer);
+    }
+    in.close();
 }
 
 
