@@ -46,6 +46,11 @@ add_library(imgui
   ${CMAKE_SOURCE_DIR}/third_party/imgui/imstb_textedit.h
   ${CMAKE_SOURCE_DIR}/third_party/imgui/imstb_truetype.h
   ${CMAKE_SOURCE_DIR}/third_party/imgui/imfilebrowser.h
+  ${CMAKE_SOURCE_DIR}/third_party/imgui/implot.h
+  ${CMAKE_SOURCE_DIR}/third_party/imgui/implot.cpp
+  ${CMAKE_SOURCE_DIR}/third_party/imgui/implot_internal.h
+  ${CMAKE_SOURCE_DIR}/third_party/imgui/implot_items.cpp
+  ${CMAKE_SOURCE_DIR}/third_party/imgui/implot_demo.cpp
   ${CMAKE_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_sdl2.h
   ${CMAKE_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_sdl2.cpp
   ${CMAKE_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_sdlrenderer2.h

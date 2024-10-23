@@ -38,12 +38,14 @@ public:
 
 private:
     std::map<std::string, Racer> mRacers;
+    std::map<std::string, std::vector<float>> mPositions;
     RaceStatus mStatus;
     Uint32 mCurrentTime = 0;
     Uint32 mRaceEndedAt = 0;
     Uint32 mRaceStartedAt =0;
     Uint32 mRacerClockInDelay = 3000; // milliseconds.
     std::string FormatTime(Uint32 time);
+    float GetRacerCurrentPosition(std::string& racerName);
     ImGui::FileBrowser mRecordingDialogue{ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_EnterNewFilename | ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_CreateNewDir};
     ImGui::FileBrowser mExportDialogue{ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_EnterNewFilename | ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_CreateNewDir};
     ImGui::FileBrowser mRacerColorExportDialogue{ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_EnterNewFilename | ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_CreateNewDir};

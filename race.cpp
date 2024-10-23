@@ -1,4 +1,5 @@
 #include "race.h"
+#include "implot.h"
 #include <iostream>
 #include <chrono>
 #include <string>
@@ -214,6 +215,23 @@ bool Race::Draw()
             }
             ImGui::EndTabItem();
         }
+//         if(ImGui::BeginTabItem("Graphs"))
+//         {
+//             if(ImPlot::BeginPlot("Positions"))
+//             {
+// //                 for (auto& racer : mPositions)
+// //                 {
+// //
+// //                     float arr[racer.second.size()];
+// //                     std::copy(racer.second.begin(), racer.second.end(), arr);
+// //                     ImPlot::PlotLine(racer.first.c_str(), arr, IM_ARRAYSIZE(arr));
+// //                     ImPlot::PlotLine();
+// //                 }
+//                 ImPlot::EndPlot();
+//             }
+//
+//             ImGui::EndTabItem();
+//         }
         ImGui::EndTabBar();
     }
     ImGui::End();
@@ -413,14 +431,15 @@ void Race::Update(Camera& raceCamera)
     }
     for(auto& racer : mRacers)
     {
+        int channel = 1;
         bool racerInFrame = raceCamera.RacerInFrame(racer.second);
         if(GetRaceStatus() == RaceStatus::CHECKING_IN && racerInFrame)
         {
             if (!racer.second.HasCheckedIn())
             {
-                if (Mix_Playing(1) !=1)
+                if (Mix_Playing(channel) !=channel)
                 {
-                    Mix_PlayChannel(1, mToneSFX, 0 );
+                    Mix_PlayChannel(channel, mToneSFX, 0 );
                 }
             }
 
@@ -448,21 +467,23 @@ void Race::Update(Camera& raceCamera)
         {
             if(racer.second.LastClockIn() == 0)
             {
-                if (Mix_Playing(1) !=1)
+                if (Mix_Playing(channel) !=channel)
                 {
-                    Mix_PlayChannel(1, mToneSFX, 0 );
+                    Mix_PlayChannel(channel, mToneSFX, 0 );
                 }
                 racer.second.StartedAt(mCurrentTime);
             }
             else if((mCurrentTime - racer.second.LastClockIn()) > mRacerClockInDelay)
             {
-                if (Mix_Playing(1) !=1)
+                if (Mix_Playing(channel) !=channel)
                 {
-                    Mix_PlayChannel(1, mToneSFX, 0 );
+                    Mix_PlayChannel(channel, mToneSFX, 0 );
                 }
                 racer.second.ClockIn(mCurrentTime);
+                mPositions[racer.second.GetName()].push_back(GetRacerCurrentPosition(racer.second.GetName()));
             }
         }
+        channel += 1;
     }
 }
 
@@ -570,6 +591,18 @@ void Race::ImportColors(std::string& location)
         AddRacer(racer);
     }
     in.close();
+}
+
+float Race::GetRacerCurrentPosition(std::string& racerName)
+{
+    std::vector<Racer> positions = GetRacePositions();
+    for(int i=0; i < positions.size(); i++)
+    {
+        if (positions[i].GetName() == racerName)
+        {
+            return i + 1;
+        }
+    }
 }
 
 
