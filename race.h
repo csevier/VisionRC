@@ -5,6 +5,7 @@
 #include "camera.h"
 #include <map>
 #include <SDL2/SDL.h>
+#include <SDL_mixer.h>
 #include <imgui.h>
 #include <imfilebrowser.h>
 
@@ -48,6 +49,10 @@ private:
     ImGui::FileBrowser mRacerColorExportDialogue{ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_EnterNewFilename | ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_CreateNewDir};
     ImGui::FileBrowser mRacerColorImportDialogue;
     std::string mSelectRecordingLocation;
+    Mix_Chunk* mToneSFX = nullptr;
+    Mix_Chunk* mRaceStartedSFX = nullptr;
+    Mix_Chunk* mRaceEndedSFX = nullptr;
+    Mix_Chunk* mCheckinSFX = nullptr;
 };
 
 extern Race CURRENT_RACE;

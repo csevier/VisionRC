@@ -2,14 +2,13 @@ Features for v1
 =============
 Post race visualization graphs.
 Pre-configured layouts for selection. Well better layouting in general at start.
+dynamic screen resolution
 Allow editable track times for error correct.* (perhaps add a button that manually stamps a lap for a racer when in offline mode?)
-Speech announcements for
-    - Race started
-    - Race Ending
-    - Race Ended
-    - Beep for lap.
-Race Durations with state for racers to finish after the bell.
+Improve all audio.
+Race Durations with state for racers to finish after the race ended.
 Allow resolution adjustment for camera.
+Multiple cams at once support
+Point to point race support with zones.
 
 Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
 =============
@@ -20,11 +19,6 @@ Video playback in offline mode is suppose to match framerate but is slower then 
     -- Okay but the times were DEAD accurate, i wonder if its my own timing math on the video and not on frames.
 Recording isnt working on remote camera?
 
-
-Features for v2
-=============
-Multiple cams at once support.
-Point to point race support.
 
 
 

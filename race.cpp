@@ -32,6 +32,28 @@ Race::Race()
     mRacerColorExportDialogue.SetTypeFilters({ ".txt"});
     mRacerColorImportDialogue.SetTitle("Importing Racer Colors");
     mRacerColorImportDialogue.SetTypeFilters({ ".txt"});
+    Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 );
+    mToneSFX = Mix_LoadWAV( "tone.wav" );
+    if( mToneSFX == NULL )
+    {
+        printf( "Failed to load tone effect! SDL_mixer Error: %s\n", Mix_GetError() );
+    }
+    mRaceEndedSFX = Mix_LoadWAV( "race_ended.wav" );
+    if( mRaceEndedSFX == NULL )
+    {
+        printf( "Failed to load ended effect! SDL_mixer Error: %s\n", Mix_GetError() );
+    }
+    mRaceStartedSFX = Mix_LoadWAV( "race_started.wav" );
+    if( mRaceStartedSFX == NULL )
+    {
+        printf( "Failed to load started effect! SDL_mixer Error: %s\n", Mix_GetError() );
+    }
+
+    mCheckinSFX = Mix_LoadWAV( "race_checkin.wav" );
+    if( mCheckinSFX == NULL )
+    {
+        printf( "Failed to load started effect! SDL_mixer Error: %s\n", Mix_GetError() );
+    }
     mStatus = RaceStatus::NOT_STARTED;
 }
 
@@ -326,17 +348,29 @@ RaceStatus Race::GetRaceStatus()
 
 void Race::StartCheckIn()
 {
+    if (Mix_Playing(4) !=1)
+    {
+        Mix_PlayChannel(4, mCheckinSFX, 0 );
+    }
     mStatus = RaceStatus::CHECKING_IN;
 }
 
 void Race::StartRace()
 {
+    if (Mix_Playing(3) !=1)
+    {
+        Mix_PlayChannel(3, mRaceStartedSFX, 0 );
+    }
     mRaceStartedAt = SDL_GetTicks();
     mStatus = RaceStatus::RUNNING;
 }
 
 void Race::EndRace()
 {
+    if (Mix_Playing(2) !=1)
+    {
+        Mix_PlayChannel(2, mRaceEndedSFX, 0 );
+    }
     mRaceEndedAt = SDL_GetTicks();
     mStatus = RaceStatus::ENDED;
 }
@@ -382,6 +416,14 @@ void Race::Update(Camera& raceCamera)
         bool racerInFrame = raceCamera.RacerInFrame(racer.second);
         if(GetRaceStatus() == RaceStatus::CHECKING_IN && racerInFrame)
         {
+            if (!racer.second.HasCheckedIn())
+            {
+                if (Mix_Playing(1) !=1)
+                {
+                    Mix_PlayChannel(1, mToneSFX, 0 );
+                }
+            }
+
             std::vector<Racer> overlappingRacers;
             for(auto& otherRacers : mRacers) // checking overlap
             {
@@ -406,10 +448,18 @@ void Race::Update(Camera& raceCamera)
         {
             if(racer.second.LastClockIn() == 0)
             {
+                if (Mix_Playing(1) !=1)
+                {
+                    Mix_PlayChannel(1, mToneSFX, 0 );
+                }
                 racer.second.StartedAt(mCurrentTime);
             }
             else if((mCurrentTime - racer.second.LastClockIn()) > mRacerClockInDelay)
             {
+                if (Mix_Playing(1) !=1)
+                {
+                    Mix_PlayChannel(1, mToneSFX, 0 );
+                }
                 racer.second.ClockIn(mCurrentTime);
             }
         }

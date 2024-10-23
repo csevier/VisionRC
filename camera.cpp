@@ -17,6 +17,8 @@ Camera::Camera(SDL_Renderer* renderer, std::string filenameOrIp, bool isOffline)
     mVideo.set(cv::CAP_PROP_AUTO_EXPOSURE, 1);
     mFrameCount = mVideo.get(cv::CAP_PROP_FRAME_COUNT);
     mCameraFPS = mVideo.get(cv::CAP_PROP_FPS);
+    mVideo.set(cv::CAP_PROP_FPS, 60);
+    mCameraFPS = mVideo.get(cv::CAP_PROP_FPS);
     mMasks["main_hsv"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["main_bgr"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["select_color"] =  std::make_unique<CameraFrame>(renderer);
@@ -37,6 +39,8 @@ Camera::Camera(SDL_Renderer* renderer, int id)
     mVideo.set(cv::CAP_PROP_AUTO_EXPOSURE, 1);
     mExposure = mVideo.get(cv::CAP_PROP_EXPOSURE);
     mBrightness = mVideo.get(cv::CAP_PROP_BRIGHTNESS);
+    mCameraFPS = mVideo.get(cv::CAP_PROP_FPS);
+    mVideo.set(cv::CAP_PROP_FPS, 60);
     mCameraFPS = mVideo.get(cv::CAP_PROP_FPS);
     mMasks["main_hsv"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["main_bgr"] =  std::make_unique<CameraFrame>(renderer);
