@@ -288,8 +288,17 @@ bool Race::Draw()
         }
 
         std::string notesLabel = racer.second.GetName() + " Notes (1024 characters)";
-        ImGui::InputTextMultiline(notesLabel.c_str(), racer.second.GetNotes(), 1024);
-
+        ImGui::InputTextMultiline(notesLabel.c_str(), racer.second.GetNotes(), 1024, ImVec2(500,50));
+        std::string toleranceLabel = racer.second.GetName() + " Required Pixels";
+        ImGui::SliderInt(toleranceLabel.c_str(), &racer.second.mRequiredPixels, 0, 3000);
+        if(racer.second.inFrame)
+        {
+            ImGui::LabelText("True", "Racer In Frame: ");
+        }
+        else
+        {
+            ImGui::LabelText("False", "Racer In Frame: ");
+        }
         if(GetRaceStatus() == RaceStatus::CHECKING_IN)
         {
             if(racer.second.HasCheckedIn())

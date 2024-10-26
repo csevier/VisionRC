@@ -39,11 +39,14 @@ public:
     Uint32 GetTotalTime();
     Uint32 AverageLapTime();
     Uint32 FastestLapTime();
+    int mRequiredPixels = 0;
+    bool inFrame = false;
 
 private:
     bool mHasCheckedIn = false;
     Uint32 mLastClocked = 0;
     Uint32 mStartedAt = 0;
+
     std::vector<Uint32> mLaptimes;
     std::string mName;
     ImVec4 mlowerBoundColorHSV1 ={0.0f, 0.0f, 0.0f, 1.0f};
