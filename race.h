@@ -39,6 +39,8 @@ public:
 private:
     std::map<std::string, Racer> mRacers;
     std::map<std::string, std::vector<float>> mPositions;
+    std::vector<Racer> mTotalRacersInFrame;
+    bool mHasOverlappingRacers;
     RaceStatus mStatus;
     Uint32 mCurrentTime = 0;
     Uint32 mRaceEndedAt = 0;

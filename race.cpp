@@ -215,23 +215,6 @@ bool Race::Draw()
             }
             ImGui::EndTabItem();
         }
-//         if(ImGui::BeginTabItem("Graphs"))
-//         {
-//             if(ImPlot::BeginPlot("Positions"))
-//             {
-// //                 for (auto& racer : mPositions)
-// //                 {
-// //
-// //                     float arr[racer.second.size()];
-// //                     std::copy(racer.second.begin(), racer.second.end(), arr);
-// //                     ImPlot::PlotLine(racer.first.c_str(), arr, IM_ARRAYSIZE(arr));
-// //                     ImPlot::PlotLine();
-// //                 }
-//                 ImPlot::EndPlot();
-//             }
-//
-//             ImGui::EndTabItem();
-//         }
         ImGui::EndTabBar();
     }
     ImGui::End();
@@ -317,18 +300,24 @@ bool Race::Draw()
             {
                 ImGui::LabelText("False", "Has Checked In: ");
             }
-            if(racer.second.IsOverlapping())
+            if(mHasOverlappingRacers)
             {
-                ImGui::SameLine();
-                ImGui::TextColored(ImVec4(1,0,0,1), "WARNING RACER OVERLAP DETECTED WITH: ");
-                ImGui::SameLine();
-                std::string names;
-
-                for(Racer overlap : racer.second.GetOverlapping())
+                for (auto& racerInFrame: mTotalRacersInFrame)
                 {
-                    names += overlap.GetName() + ", ";
+                    if (racerInFrame.GetName() == racer.second.GetName())
+                    {
+                        ImGui::SameLine();
+                        ImGui::TextColored(ImVec4(1,0,0,1), "WARNING RACER OVERLAP DETECTED WITH: ");
+                        ImGui::SameLine();
+                        std::string names;
+
+                         for (auto& overlap: mTotalRacersInFrame)
+                        {
+                            names += overlap.GetName() + ", ";
+                        }
+                        ImGui::TextColored(ImVec4(1,0,0,1), names.c_str());
+                    }
                 }
-                ImGui::TextColored(ImVec4(1,0,0,1), names.c_str());
             }
         }
 
@@ -351,6 +340,7 @@ bool Race::Draw()
         AddRacer(newRacer);
     }
     ImGui::End();
+    mTotalRacersInFrame.clear();
     return shouldResetToSource;
 }
 
@@ -433,6 +423,7 @@ void Race::Update(Camera& raceCamera)
     {
         int channel = 1;
         bool racerInFrame = raceCamera.RacerInFrame(racer.second);
+        if (racerInFrame) mTotalRacersInFrame.push_back(racer.second);
         if(GetRaceStatus() == RaceStatus::CHECKING_IN && racerInFrame)
         {
             if (!racer.second.HasCheckedIn())
@@ -441,27 +432,8 @@ void Race::Update(Camera& raceCamera)
                 {
                     Mix_PlayChannel(channel, mToneSFX, 0 );
                 }
-            }
-
-            std::vector<Racer> overlappingRacers;
-            for(auto& otherRacers : mRacers) // checking overlap
-            {
-                bool racerInFrame = raceCamera.RacerInFrame(otherRacers.second);
-                if(racerInFrame && otherRacers.second.GetName() != racer.second.GetName())
-                {
-                    overlappingRacers.push_back(otherRacers.second);
-                }
-            }
-            if(overlappingRacers.size() == 0) // no overlap
-            {
                 racer.second.CheckIn();
-                racer.second.ClearOverlaps();
             }
-            else
-            {
-                racer.second.CheckOut();
-                racer.second.SetOverlapping(overlappingRacers);
-            } // overlap with
         }
         if(GetRaceStatus() == RaceStatus::RUNNING && racerInFrame)
         {
@@ -485,6 +457,7 @@ void Race::Update(Camera& raceCamera)
         }
         channel += 1;
     }
+        mHasOverlappingRacers = mTotalRacersInFrame.size() >1;
 }
 
 std::string Race::FormatTime(Uint32 time)
