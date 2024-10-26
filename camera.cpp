@@ -99,7 +99,7 @@ bool Camera::RacerInFrame(Racer& racer)
     cv::cvtColor(mMasks[racer.GetName()]->GetMatrix(), out, cv::COLOR_GRAY2BGR);
     cv::bitwise_and(mMasks["main_bgr"]->GetMatrix(),out, out);
     mMasks[racer.GetName()]->SetMatrix(out);
-    mRacerFoundThisFrame = resultCount >0;
+    mRacerFoundThisFrame = resultCount >= mTolerance;
     return mRacerFoundThisFrame;
 }
 
@@ -118,6 +118,10 @@ void Camera::Draw()
     ImGui::Image((void*)mMasks["main_bgr"]->GetTexture(), ImVec2(mMasks["main_bgr"]->GetWidth(),mMasks["main_bgr"]->GetHeight()),uv_min,uv_max);
     ImVec2 race_cam_min_loc = ImGui::GetItemRectMin();
     ImVec2 race_cam_size = ImGui::GetItemRectSize();
+    if(ImGui::SliderInt("Tolerance", &mTolerance, 0, 10000))
+    {
+        // mVideo.set(cv::CAP_PROP_EXPOSURE, mExposure);
+    }
     if (ImGui::BeginPopupContextWindow("my popup"))
     {
         ImGui::SeparatorText("Apply Color To:");

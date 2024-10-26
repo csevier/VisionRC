@@ -44,6 +44,7 @@ private:
     bool mPause = false;
     int mFrameCount = 0;
     int mCurrentFrame = 0;
+    int mTolerance = 0;
     double mCameraFPS = 0;
 };
 
