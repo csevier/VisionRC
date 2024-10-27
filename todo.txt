@@ -13,7 +13,6 @@ Point to point race support with zones.
 Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
 =============
 Dont usem v4l2 camera backend, needs to be cross plat.
-App crashes when more then 2 check in cars have multiple overlaps. Fix it.
 Dont assume resolutions!
 Video playback in offline mode is suppose to match framerate but is slower then actual time.?!?!?s
     -- Okay but the times were DEAD accurate, i wonder if its my own timing math on the video and not on frames.
