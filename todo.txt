@@ -9,9 +9,12 @@ Race Durations with state for racers to finish after the race ended.
 Allow resolution adjustment for camera.
 Multiple cams at once support
 Point to point race support with zones.
+allow racer name changes.
 
 Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
 =============
+deleted racers need their masks deleted as well
+export racer pixel requirements with color
 Dont usem v4l2 camera backend, needs to be cross plat.
 Dont assume resolutions!
 Video playback in offline mode is suppose to match framerate but is slower then actual time.?!?!?s
