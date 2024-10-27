@@ -320,9 +320,10 @@ bool Race::Draw()
                         ImGui::SameLine();
                         std::string names;
 
-                         for (auto& overlap: mTotalRacersInFrame)
+                        for (auto& overlap: mTotalRacersInFrame)
                         {
-                            names += overlap.GetName() + ", ";
+                            if (racerInFrame.GetName() == overlap.GetName()) continue;
+                            names += overlap.GetName() + " ";
                         }
                         ImGui::TextColored(ImVec4(1,0,0,1), names.c_str());
                     }
