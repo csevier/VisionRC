@@ -154,8 +154,16 @@ int App::Run()
                     race_camera.reset();
                     race_camera = nullptr;
                 }
-                ImGui::Begin("Performance Counter");                          // Create a window called "Hello, world!" and append into it.
-                ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+                ImGui::Begin("Timing Fidelity");
+                 std::string label="Application average " + std::to_string(1000.0f / ImGui::GetIO().Framerate) +  " ms/frame (" + std::to_string((int)ImGui::GetIO().Framerate) +" FPS)";
+                if(ImGui::GetIO().Framerate < 25)
+                {
+                    ImGui::TextColored(ImVec4(1,0,0,1),label.c_str());
+                }
+                else
+                {
+                    ImGui::TextColored(ImVec4(0,1,0,1),label.c_str());
+                }
                 ImGui::End();
             }
             else

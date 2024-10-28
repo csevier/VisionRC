@@ -6,6 +6,28 @@
 #include <vector>
 #include "imgui.h"
 
+// c api
+struct Racer_t
+{
+    bool mHasCheckedIn = false;
+    Uint32 mLastClocked = 0;
+    Uint32 mStartedAt = 0;
+    std::vector<Uint32> mLaptimes;
+    char *mName;
+    ImVec4 mlowerBoundColorHSV1 ={0.0f, 0.0f, 0.0f, 1.0f};
+    ImVec4 mlowerBoundColorHSV255 = {0.0f, 0.0f, 0.0f, 255.0f};
+    ImVec4 mUpperBoundColorHSV1 ={0.0f, 0.0f, 0.0f, 1.0f};
+    ImVec4 mUpperBoundColorHSV255 = {0.0f, 0.0f, 0.0f, 255.0f};
+    ImVec4 mColorHSV255= {0.0f, 0.0f, 0.0f, 255.0f};
+    std::vector<Racer_t> mOverlappingWith;
+    char mNotes[1024] = "";
+    int mRequiredPixels = 0;
+    bool inFrame = false;
+};
+// end c api
+
+//c ++ api
+
 class Racer
 {
 public:
@@ -46,7 +68,6 @@ private:
     bool mHasCheckedIn = false;
     Uint32 mLastClocked = 0;
     Uint32 mStartedAt = 0;
-
     std::vector<Uint32> mLaptimes;
     std::string mName;
     ImVec4 mlowerBoundColorHSV1 ={0.0f, 0.0f, 0.0f, 1.0f};
@@ -57,5 +78,5 @@ private:
     std::vector<Racer> mOverlappingWith;
     char mNotes[1024] = "";
 };
-
+//end cpp api
 #endif // RACER_H

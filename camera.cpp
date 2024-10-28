@@ -144,13 +144,22 @@ void Camera::Draw()
     }
     if (!mIsOfflineMode)
     {
-        if(ImGui::SliderInt("Exposure", &mExposure, 0, 1000))
+        ImGui::Checkbox("Auto Exposure - Use Only In Volatile light settings with plentiful light.", &mAutoExposure);
+        if (mAutoExposure)
         {
-            mVideo.set(cv::CAP_PROP_EXPOSURE, mExposure);
+            mVideo.set(cv::CAP_PROP_AUTO_EXPOSURE, 3);
         }
-        if (ImGui::SliderInt("Brightness", &mBrightness, 0, 1000))
+        else
         {
-            mVideo.set(cv::CAP_PROP_BRIGHTNESS, mBrightness);
+            mVideo.set(cv::CAP_PROP_AUTO_EXPOSURE, 1);
+            if(ImGui::SliderInt("Exposure", &mExposure, 0, 1000))
+            {
+                mVideo.set(cv::CAP_PROP_EXPOSURE, mExposure);
+            }
+            if (ImGui::SliderInt("Brightness", &mBrightness, 0, 1000))
+            {
+                mVideo.set(cv::CAP_PROP_BRIGHTNESS, mBrightness);
+            }
         }
     }
     else

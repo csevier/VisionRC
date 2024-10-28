@@ -23,6 +23,7 @@ public:
     void Pause();
     void Unpause();
     bool IsVideoOver();
+    bool mAutoExposure = false;
 
 private:
     void SampleColor(ImVec2 race_cam_min_loc, ImVec2 race_cam_max_loc);
@@ -42,6 +43,7 @@ private:
     int mBrightness =0;
     bool mIsOfflineMode = false;
     bool mPause = false;
+
     int mFrameCount = 0;
     int mCurrentFrame = 0;
     double mCameraFPS = 0;
