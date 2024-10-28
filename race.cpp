@@ -1,5 +1,4 @@
 #include "race.h"
-#include "implot.h"
 #include <iostream>
 #include <chrono>
 #include <string>
@@ -544,6 +543,7 @@ void Race::ExportColors(std::string& location)
         out << racer.second.GetLowerColorHSV255().x<< " ";
         out << racer.second.GetLowerColorHSV255().y<< " ";
         out << racer.second.GetLowerColorHSV255().z<< " ";
+        out << std::to_string(racer.second.mRequiredPixels) << " ";
         out << std::endl;
     }
     out.close();
@@ -564,13 +564,15 @@ void Race::ImportColors(std::string& location)
     std::string lowerH;
     std::string lowerS;
     std::string lowerV;
-    while(in >> name >> baseH >> baseS >> baseV >> upperH >> upperS >> upperV >> lowerH >> lowerS >> lowerV)
+    std::string requiredPixels;
+    while(in >> name >> baseH >> baseS >> baseV >> upperH >> upperS >> upperV >> lowerH >> lowerS >> lowerV >> requiredPixels)
     {
         Racer racer;
         racer.SetName(name);
         racer.SetColor(std::stof(baseH),std::stof(baseS),std::stof(baseV));
         racer.SetUpperColor(std::stof(upperH),std::stof(upperS),std::stof(upperV));
         racer.SetLowerColor(std::stof(lowerH),std::stof(lowerS),std::stof(lowerV));
+        racer.mRequiredPixels = std::stoi(requiredPixels);
         AddRacer(racer);
     }
     in.close();
