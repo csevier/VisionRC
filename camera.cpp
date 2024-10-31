@@ -219,7 +219,12 @@ void Camera::Draw()
         ImGui::EndTabBar();
     }
 
-   ImGui::End();
+    ImGui::End();
+    ImDrawList* draw_list = ImGui::GetWindowDrawList();
+    for (auto&  zone : zones)
+    {
+        draw_list->AddRect(zone.first, zone.second, ImColor(255,0,0,255), 0.0f, ImDrawFlags_None, 1.0f);
+    }
 }
 
 void Camera::SampleColor(ImVec2 race_cam_min_loc, ImVec2 race_cam_size)

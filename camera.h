@@ -24,6 +24,7 @@ public:
     void Unpause();
     bool IsVideoOver();
     bool mAutoExposure = false;
+    std::vector<std::pair<ImVec2, ImVec2>> zones = {{ImVec2(10,10), ImVec2(20,20)}};
 
 private:
     void SampleColor(ImVec2 race_cam_min_loc, ImVec2 race_cam_max_loc);
