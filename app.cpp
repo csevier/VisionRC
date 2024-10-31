@@ -95,7 +95,7 @@ int App::Run()
 {
 
     // Our state
-    bool show_demo_window = true;
+    bool show_demo_window = false;
     //ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
     std::unique_ptr<Camera> race_camera = nullptr;
@@ -142,7 +142,14 @@ int App::Run()
             ImGui_ImplSDLRenderer2_NewFrame();
             ImGui_ImplSDL2_NewFrame();
             ImGui::NewFrame();
-
+            //ImDrawList* draw_list = ImGui::GetWindowDrawList();
+            //ImGui::Draw
+            //for (auto&  zone : zones)
+            //{
+                //draw_list->AddRect(zone.first, zone.second, IM_COL32_WHITE, 0.0f, ImDrawFlags_None, 4.0f);
+                //draw_list->AddRect(ImVec2(50, 50),ImVec2(55, 55), IM_COL32_WHITE, 0.0f, ImDrawFlags_None, 4.0f);
+                //draw_list->AddRect(ImVec2(x /2, 2), ImVec2(y /2, 2), IM_COL32(255, 0, 0, 128), 0.0f, ImDrawFlags_None, 1.0f);
+            //}
             if (race_camera != nullptr)
             {
                 desiredFPS = race_camera->GetCameraFPS();
@@ -155,7 +162,7 @@ int App::Run()
                     race_camera = nullptr;
                 }
                 ImGui::Begin("Timing Fidelity");
-                 std::string label="Application average " + std::to_string(1000.0f / ImGui::GetIO().Framerate) +  " ms/frame (" + std::to_string((int)ImGui::GetIO().Framerate) +" FPS)";
+                std::string label="Camera Polling Every " + std::to_string(1000.0f / ImGui::GetIO().Framerate) +  " ms";
                 if(ImGui::GetIO().Framerate < 25)
                 {
                     ImGui::TextColored(ImVec4(1,0,0,1),label.c_str());

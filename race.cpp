@@ -431,7 +431,8 @@ void Race::Update(Camera& raceCamera)
     for(auto& racer : mRacers)
     {
         int channel = 1;
-        bool racerInFrame = raceCamera.RacerInFrame(racer.second);
+        std::vector<int> inZones;
+        bool racerInFrame = raceCamera.RacerInFrame(racer.second, inZones);
         if (racerInFrame) mTotalRacersInFrame.push_back(racer.second);
         if(GetRaceStatus() == RaceStatus::CHECKING_IN && racerInFrame)
         {

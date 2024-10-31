@@ -79,34 +79,71 @@ std::chrono::time_point<std::chrono::system_clock>& Camera::GetFrameTimeStamp()
     return mFrameTimeStamp;
 }
 
-bool Camera::RacerInFrame(Racer& racer)
+bool Camera::RacerInFrame(Racer& racer, std::vector<int>& inZones)
 {
+    mRacerFoundThisFrame = false;
+    racer.inFrame = false;
     if(!mMasks.count(racer.GetName()))
     {
        mMasks[racer.GetName()] = std::make_unique<CameraFrame>(mRenderer);
     }
     cv::Scalar upperColor = cv::Scalar(racer.GetUpperColorHSV255().x,racer.GetUpperColorHSV255().y,racer.GetUpperColorHSV255().z);
     cv::Scalar lowerColor = cv::Scalar(racer.GetLowerColorHSV255().x,racer.GetLowerColorHSV255().y,racer.GetLowerColorHSV255().z);
-
     cv::Mat racerMatrix;
     cv::inRange( mMasks["main_hsv"]->GetMatrix(),lowerColor,upperColor, racerMatrix);
     mMasks[racer.GetName()]->SetMatrix(racerMatrix);
-
-
-    // todo will be racers matrix;
-    int resultCount = cv::countNonZero(racerMatrix);
+    int fullFrameResultCount = cv::countNonZero(racerMatrix);
     cv::Mat out;
     cv::cvtColor(mMasks[racer.GetName()]->GetMatrix(), out, cv::COLOR_GRAY2BGR);
     cv::bitwise_and(mMasks["main_bgr"]->GetMatrix(),out, out);
     mMasks[racer.GetName()]->SetMatrix(out);
-    mRacerFoundThisFrame = resultCount > racer.mRequiredPixels;
-    if (mRacerFoundThisFrame)
+
+    if (!zones.empty())
     {
-        racer.inFrame = true;
+        for (int i = 0; i < zones.size(); i++)
+        {
+            //cv::rec
+
+            cv::Point2i start(zones[i].first.x,  zones[i].first.y);
+            cv::Point2i end(zones[i].second.x,  zones[i].second.y);
+            // bug crashes if drawn backwards
+            cv::Rect rec = {start, end};
+            //cv::Rect rec(zones[i].first.x, zones[i].first.y, zones[i].second.x, zones[i].second.y);
+            int row_start = zones[i].first.y;
+            int row_end = zones[i].second.y;
+            cv::Range rowRange = {row_start,row_end};
+            int col_start = zones[i].first.x;
+            int col_end = zones[i].second.x;
+            cv::Range colRange = {col_start,col_end};
+
+            cv::Mat zone_matrix = mMasks["main_hsv"]->GetMatrix()(rowRange,colRange).clone();
+            cv::Mat racerMatrix;
+            cv::inRange(zone_matrix,lowerColor,upperColor, racerMatrix);
+            int resultCount = cv::countNonZero(racerMatrix);
+            bool racerInZone = resultCount > racer.mRequiredPixels;
+            if (racerInZone && i ==0) // finish line is always zone 0
+            {
+                inZones.push_back(i);
+                mRacerFoundThisFrame = true;
+                racer.inFrame = true;
+            }
+            else if (racerInZone)
+            {
+                inZones.push_back(i);
+            }
+        }
     }
     else
     {
-       racer.inFrame = false;
+        mRacerFoundThisFrame = fullFrameResultCount > racer.mRequiredPixels;
+        if (mRacerFoundThisFrame)
+        {
+            racer.inFrame = true;
+        }
+        else
+        {
+            racer.inFrame = false;
+        }
     }
     return mRacerFoundThisFrame;
 }
@@ -126,6 +163,38 @@ void Camera::Draw()
     ImGui::Image((void*)mMasks["main_bgr"]->GetTexture(), ImVec2(mMasks["main_bgr"]->GetWidth(),mMasks["main_bgr"]->GetHeight()),uv_min,uv_max);
     ImVec2 race_cam_min_loc = ImGui::GetItemRectMin();
     ImVec2 race_cam_size = ImGui::GetItemRectSize();
+    ImVec2 mouse_pos  = ImGui::GetMousePos();
+    float mouse_in_cam_pos_x = mouse_pos.x - race_cam_min_loc.x;
+    float mouse_in_cam_pos_y = mouse_pos.y - race_cam_min_loc.y;
+    if (ImGui::IsItemClicked(0))
+    {
+        if (mouse_start.x == -1 && mouse_start.y == -1)
+        {
+            mouse_start = mouse_pos;
+            zone_start = ImVec2(mouse_in_cam_pos_x, mouse_in_cam_pos_y);
+            isDrawingZone = true;
+        }
+        else
+        {
+            mouse_end = mouse_pos;
+            zone_end = ImVec2(mouse_in_cam_pos_x, mouse_in_cam_pos_y);
+            zones.push_back(std::pair<ImVec2, ImVec2>(zone_start, zone_end));
+            isDrawingZone = false;
+            mouse_start.x = -1;
+            mouse_start.y = -1;
+        }
+    }
+    if(isDrawingZone)
+    {
+        DrawZone(mouse_start, ImGui::GetMousePos());
+    }
+    ImGui::Text((std::to_string(mouse_in_cam_pos_x) + " " + std::to_string(mouse_in_cam_pos_y)).c_str());
+    ImDrawList* draw_list = ImGui::GetWindowDrawList();
+    for (auto&  zone : zones)
+    {
+        draw_list->AddRect(RaceCamToMouseCoords(race_cam_min_loc,zone.first), RaceCamToMouseCoords(race_cam_min_loc,zone.second), IM_COL32_WHITE, 0.0f, ImDrawFlags_None, 4.0f);
+    }
+
     if (ImGui::BeginPopupContextWindow("my popup"))
     {
         ImGui::SeparatorText("Apply Color To:");
@@ -201,7 +270,6 @@ void Camera::Draw()
         ImGui::SameLine();
         ImGui::Text("%s", frame_pos_label.c_str());
     }
-
     ImGui::End();
     ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
     ImGui::Begin("Masks");
@@ -220,11 +288,12 @@ void Camera::Draw()
     }
 
     ImGui::End();
+}
+
+void Camera::DrawZone(ImVec2 mouse_start, ImVec2 mouse_end)
+{
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
-    for (auto&  zone : zones)
-    {
-        draw_list->AddRect(zone.first, zone.second, ImColor(255,0,0,255), 0.0f, ImDrawFlags_None, 1.0f);
-    }
+    draw_list->AddRect(mouse_start,mouse_end,  IM_COL32(255, 0, 0, 255), 0.0f, ImDrawFlags_None, 4.0f);
 }
 
 void Camera::SampleColor(ImVec2 race_cam_min_loc, ImVec2 race_cam_size)
@@ -242,6 +311,19 @@ void Camera::SampleColor(ImVec2 race_cam_min_loc, ImVec2 race_cam_size)
         mRacerColorFromMouseHSV255.y = colorUnderMouse[1];
         mRacerColorFromMouseHSV255.z = colorUnderMouse[2];
     }
+}
+ImVec2 Camera::MouseToRaceCamCoords(ImVec2 race_cam_min_loc, ImVec2 mouse)
+{
+    float mouse_in_cam_pos_x = mouse.x - race_cam_min_loc.x;
+    float mouse_in_cam_pos_y = mouse.y - race_cam_min_loc.y;
+    return ImVec2(mouse_in_cam_pos_x, mouse_in_cam_pos_y);
+}
+
+ImVec2 Camera::RaceCamToMouseCoords(ImVec2 race_cam_min_loc, ImVec2 raceCam)
+{
+    float mouse_pos_x = raceCam.x + race_cam_min_loc.x;
+    float mouse_pos_y = raceCam.y + race_cam_min_loc.y;
+    return ImVec2(mouse_pos_x, mouse_pos_y);
 }
 
 void Camera::UpdateColorSelectFrame()
