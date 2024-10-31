@@ -162,7 +162,7 @@ int App::Run()
                     race_camera = nullptr;
                 }
                 ImGui::Begin("Timing Fidelity");
-                std::string label="Camera Polling Every " + std::to_string(1000.0f / ImGui::GetIO().Framerate) +  " ms";
+                std::string label="Camera Polling Every " + std::to_string(1000.0f / ImGui::GetIO().Framerate) +  " ms or " + std::to_string((int)ImGui::GetIO().Framerate) + " times per second";
                 if(ImGui::GetIO().Framerate < 25)
                 {
                     ImGui::TextColored(ImVec4(1,0,0,1),label.c_str());

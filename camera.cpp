@@ -166,7 +166,7 @@ void Camera::Draw()
     ImVec2 mouse_pos  = ImGui::GetMousePos();
     float mouse_in_cam_pos_x = mouse_pos.x - race_cam_min_loc.x;
     float mouse_in_cam_pos_y = mouse_pos.y - race_cam_min_loc.y;
-    if (ImGui::IsItemClicked(0))
+    if (ImGui::IsItemClicked(2))
     {
         if (mouse_start.x == -1 && mouse_start.y == -1)
         {
@@ -178,7 +178,14 @@ void Camera::Draw()
         {
             mouse_end = mouse_pos;
             zone_end = ImVec2(mouse_in_cam_pos_x, mouse_in_cam_pos_y);
-            zones.push_back(std::pair<ImVec2, ImVec2>(zone_start, zone_end));
+            // order correctly for later sub matrix
+            int minx = std::min<int>(zone_start.x, zone_end.x);
+            int miny = std::min<int>(zone_start.y, zone_end.y);
+            int maxx = std::max<int>(zone_start.x, zone_end.x);
+            int maxy = std::max<int>(zone_start.y, zone_end.y);
+            ImVec2 topLeft(minx, miny);
+            ImVec2 bottomRight(maxx, maxy);
+            zones.push_back(std::pair<ImVec2, ImVec2>(topLeft, bottomRight));
             isDrawingZone = false;
             mouse_start.x = -1;
             mouse_start.y = -1;
@@ -190,9 +197,30 @@ void Camera::Draw()
     }
     ImGui::Text((std::to_string(mouse_in_cam_pos_x) + " " + std::to_string(mouse_in_cam_pos_y)).c_str());
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
-    for (auto&  zone : zones)
+    for (int i =0; i < zones.size(); i++)
     {
-        draw_list->AddRect(RaceCamToMouseCoords(race_cam_min_loc,zone.first), RaceCamToMouseCoords(race_cam_min_loc,zone.second), IM_COL32_WHITE, 0.0f, ImDrawFlags_None, 4.0f);
+        if (i ==0)
+        {
+            draw_list->AddText(RaceCamToMouseCoords(race_cam_min_loc,ImVec2(zones[i].first.x, zones[i].first.y - 15)),IM_COL32_WHITE, "Start/Finish");
+        }
+        else
+        {
+            draw_list->AddText(RaceCamToMouseCoords(race_cam_min_loc,ImVec2(zones[i].first.x, zones[i].first.y - 15)),IM_COL32_WHITE,std::to_string(i).c_str());
+        }
+        // Get the absolute position where you want to place the button
+        ImVec2 buttonPos = RaceCamToMouseCoords(race_cam_min_loc,ImVec2(zones[i].second.x, zones[i].first.y));// Example position
+
+        // Set the cursor position to the desired location
+        auto pos = ImGui::GetCursorScreenPos();
+        ImGui::SetCursorScreenPos(buttonPos);
+
+        // Create the button
+        if (ImGui::Button(("x##" + std::to_string(i)).c_str()))
+        {
+            zones.erase(zones.begin()+ i);
+        }
+        draw_list->AddRect(RaceCamToMouseCoords(race_cam_min_loc,zones[i].first), RaceCamToMouseCoords(race_cam_min_loc,zones[i].second), IM_COL32_WHITE, 0.0f, ImDrawFlags_None, 4.0f);
+        ImGui::SetCursorScreenPos(pos);
     }
 
     if (ImGui::BeginPopupContextWindow("my popup"))
