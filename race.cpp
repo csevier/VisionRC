@@ -179,40 +179,32 @@ bool Race::Draw()
         {
             if (ImGui::BeginTabItem(racer.second.GetName().c_str()))
             {
-                if (ImGui::BeginTabBar("racer", tab_bar_flags))
+                if(racer.second.HasStarted())
                 {
-                    if (ImGui::BeginTabItem("Laps"))
+                    ImGui::LabelText(FormatTime(racer.second.StartedAt()).c_str(), "Started at: ");
+                }
+                if (ImGui::TreeNode("Laps"))
+                {
+                    for(int lapi = 0; lapi < racer.second.GetLapTimes().size(); lapi++)
                     {
-                        if(racer.second.HasStarted())
+                        if (lapi == 0)
+                            ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+                        std::string label = racer.second.GetName() + " Lap " + std::to_string(lapi + 1) + ": ";
+                        Uint32 lapTime = racer.second.GetLapTimes()[lapi];
+                        ImGui::PushID(lapi);
+                        if (ImGui::TreeNode((label + FormatTime(lapTime)).c_str()))
                         {
-                            ImGui::LabelText(FormatTime(racer.second.StartedAt()).c_str(), "Started at: ");
-                        }
-                        for(int i = 0; i < racer.second.GetLapTimes().size(); i++)
-                        {
-                            std::string label = racer.second.GetName() + " Lap " + std::to_string(i + 1) + ": ";
-                            Uint32 lapTime = racer.second.GetLapTimes()[i];
-                            if (lapTime == racer.second.FastestLapTime())
+                            for (int i = 0; i < racer.second.lapSectionTimes[lapi].size(); i++)
                             {
-                                std::string fastest = label + FormatTime(lapTime);
-                                ImGui::TextColored(ImVec4(0,1,0,1),fastest.c_str());
+                                std::string label = std::to_string(i + 1) + ": ";
+                                Uint32 sectionTime = racer.second.lapSectionTimes[lapi][i];
+                                ImGui::Text(FormatTime(sectionTime).c_str(), label.c_str(),i);
                             }
-                            else
-                            {
-                                ImGui::LabelText(FormatTime(lapTime).c_str(), label.c_str());
-                            }
+                            ImGui::TreePop();
                         }
-                        ImGui::EndTabItem();
+                       ImGui::PopID();
                     }
-                    if (ImGui::BeginTabItem("Sections"))
-                    {
-                        for (auto& section: racer.second.mSectionTimes)
-                        {
-                            std::string label = racer.second.GetName() + "Section  " + std::to_string(racer.second.mLastZone) + "->" + std::to_string(racer.second.mCurrentZone) + ": ";
-                            ImGui::LabelText(FormatTime(section).c_str(), label.c_str());
-                        }
-                        ImGui::EndTabItem();
-                    }
-                    ImGui::EndTabBar();
+                    ImGui::TreePop();
                 }
                 ImGui::EndTabItem();
             }

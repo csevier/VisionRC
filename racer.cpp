@@ -90,6 +90,8 @@ void Racer::CheckOut()
 
 void Racer::ClockIn(Uint32 clockTime)
 {
+    lapSectionTimes[mLaptimes.size()] = mSectionTimes;
+    mSectionTimes.clear();
     if (mLaptimes.size() == 0)
     {
         mLaptimes.push_back(clockTime - mStartedAt);
@@ -99,6 +101,7 @@ void Racer::ClockIn(Uint32 clockTime)
         mLaptimes.push_back(clockTime - mLastClocked);
     }
     mLastClocked = clockTime;
+
 }
 
 void Racer::ClockSection(Uint32 clockTime)

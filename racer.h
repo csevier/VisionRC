@@ -2,6 +2,7 @@
 #define RACER_H
 
 #include <string>
+#include <map>
 #include <SDL2/SDL.h>
 #include <vector>
 #include "imgui.h"
@@ -69,6 +70,7 @@ public:
     int mCurrentZone = -1;
     Uint32 mCurrentZoneTime =0;
     std::vector<Uint32> mSectionTimes;
+    std::map<int,std::vector<Uint32>> lapSectionTimes;
     Uint32 lastZoneClockTimes[25]= {0};; // 25 zones max.
 
 private:
