@@ -171,7 +171,7 @@ bool Race::Draw()
     ImGui::LabelText(FormatTime(mCurrentTime).c_str(), "Race Timer: ");
     ImGui::End();
 
-    ImGui::Begin("Lap Times");
+    ImGui::Begin("Lap Data");
     ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
     if (ImGui::BeginTabBar("Laps", tab_bar_flags))
     {
@@ -179,28 +179,40 @@ bool Race::Draw()
         {
             if (ImGui::BeginTabItem(racer.second.GetName().c_str()))
             {
-                if(racer.second.HasStarted())
+                if (ImGui::BeginTabBar("racer", tab_bar_flags))
                 {
-                    ImGui::LabelText(FormatTime(racer.second.StartedAt()).c_str(), "Started at: ");
-                }
-                for(int i = 0; i < racer.second.GetLapTimes().size(); i++)
-                {
-                    std::string label = racer.second.GetName() + " Lap " + std::to_string(i + 1) + ": ";
-                    Uint32 lapTime = racer.second.GetLapTimes()[i];
-                    if (lapTime == racer.second.FastestLapTime())
+                    if (ImGui::BeginTabItem("Laps"))
                     {
-                        std::string fastest = label + FormatTime(lapTime);
-                        ImGui::TextColored(ImVec4(0,1,0,1),fastest.c_str());
+                        if(racer.second.HasStarted())
+                        {
+                            ImGui::LabelText(FormatTime(racer.second.StartedAt()).c_str(), "Started at: ");
+                        }
+                        for(int i = 0; i < racer.second.GetLapTimes().size(); i++)
+                        {
+                            std::string label = racer.second.GetName() + " Lap " + std::to_string(i + 1) + ": ";
+                            Uint32 lapTime = racer.second.GetLapTimes()[i];
+                            if (lapTime == racer.second.FastestLapTime())
+                            {
+                                std::string fastest = label + FormatTime(lapTime);
+                                ImGui::TextColored(ImVec4(0,1,0,1),fastest.c_str());
+                            }
+                            else
+                            {
+                                ImGui::LabelText(FormatTime(lapTime).c_str(), label.c_str());
+                            }
+                        }
+                        ImGui::EndTabItem();
                     }
-                    else
+                    if (ImGui::BeginTabItem("Sections"))
                     {
-                        ImGui::LabelText(FormatTime(lapTime).c_str(), label.c_str());
+                        ImGui::EndTabItem();
                     }
+                    ImGui::EndTabBar();
                 }
                 ImGui::EndTabItem();
             }
         }
-        if(ImGui::BeginTabItem("Positions"))
+        if(ImGui::BeginTabItem("Positions/Pace"))
         {
             std::vector<Racer> racerPositions = GetRacePositions();
             for(int i = 0; i < racerPositions.size(); i++)
