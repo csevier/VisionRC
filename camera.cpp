@@ -79,7 +79,7 @@ std::chrono::time_point<std::chrono::system_clock>& Camera::GetFrameTimeStamp()
     return mFrameTimeStamp;
 }
 
-bool Camera::RacerInFrame(Racer& racer, std::vector<int>& inZones)
+bool Camera::RacerInFrame(Racer& racer)
 {
     mRacerFoundThisFrame = false;
     racer.inFrame = false;
@@ -102,13 +102,6 @@ bool Camera::RacerInFrame(Racer& racer, std::vector<int>& inZones)
     {
         for (int i = 0; i < zones.size(); i++)
         {
-            //cv::rec
-
-            cv::Point2i start(zones[i].first.x,  zones[i].first.y);
-            cv::Point2i end(zones[i].second.x,  zones[i].second.y);
-            // bug crashes if drawn backwards
-            cv::Rect rec = {start, end};
-            //cv::Rect rec(zones[i].first.x, zones[i].first.y, zones[i].second.x, zones[i].second.y);
             int row_start = zones[i].first.y;
             int row_end = zones[i].second.y;
             cv::Range rowRange = {row_start,row_end};
@@ -123,15 +116,26 @@ bool Camera::RacerInFrame(Racer& racer, std::vector<int>& inZones)
             bool racerInZone = resultCount > racer.mRequiredPixels;
             if (racerInZone && i ==0) // finish line is always zone 0
             {
-                inZones.push_back(i);
                 mRacerFoundThisFrame = true;
                 racer.inFrame = true;
+                if (racer.mCurrentZone !=-1)
+                {
+                    racer.mLastZone = racer.mCurrentZone;
+                }
+                racer.mCurrentZone = i;
+                return mRacerFoundThisFrame; // just return first zone
             }
             else if (racerInZone)
             {
-                inZones.push_back(i);
+                if (racer.mCurrentZone !=-1)
+                {
+                    racer.mLastZone = racer.mCurrentZone;
+                }
+                racer.mCurrentZone = i;
+                return mRacerFoundThisFrame; // just return first zone
             }
         }
+        racer.mCurrentZone = -1;
     }
     else
     {
@@ -207,17 +211,20 @@ void Camera::Draw()
         {
             draw_list->AddText(RaceCamToMouseCoords(race_cam_min_loc,ImVec2(zones[i].first.x, zones[i].first.y - 15)),IM_COL32_WHITE,std::to_string(i).c_str());
         }
-        // Get the absolute position where you want to place the button
-        ImVec2 buttonPos = RaceCamToMouseCoords(race_cam_min_loc,ImVec2(zones[i].second.x, zones[i].first.y));// Example position
-
-        // Set the cursor position to the desired location
         auto pos = ImGui::GetCursorScreenPos();
-        ImGui::SetCursorScreenPos(buttonPos);
-
-        // Create the button
-        if (ImGui::Button(("x##" + std::to_string(i)).c_str()))
+        if (CURRENT_RACE.GetRaceStatus() != RaceStatus::RUNNING)
         {
-            zones.erase(zones.begin()+ i);
+            // Get the absolute position where you want to place the button
+            ImVec2 buttonPos = RaceCamToMouseCoords(race_cam_min_loc,ImVec2(zones[i].second.x, zones[i].first.y));// Example position
+
+            // Set the cursor position to the desired location
+            ImGui::SetCursorScreenPos(buttonPos);
+
+            // Create the button
+            if (ImGui::Button(("x##" + std::to_string(i)).c_str()))
+            {
+                zones.erase(zones.begin()+ i);
+            }
         }
         draw_list->AddRect(RaceCamToMouseCoords(race_cam_min_loc,zones[i].first), RaceCamToMouseCoords(race_cam_min_loc,zones[i].second), IM_COL32_WHITE, 0.0f, ImDrawFlags_None, 4.0f);
         ImGui::SetCursorScreenPos(pos);

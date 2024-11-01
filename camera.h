@@ -15,7 +15,7 @@ public:
     ~Camera();
     void NextFrame();
     std::chrono::time_point<std::chrono::system_clock>& GetFrameTimeStamp();
-    bool RacerInFrame(Racer& racer, std::vector<int>& inZones);
+    bool RacerInFrame(Racer& racer);
     void Draw();
     void Record(std::string& location);
     void StopRecording();

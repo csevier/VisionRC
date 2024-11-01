@@ -46,6 +46,7 @@ public:
     void CheckIn();
     void CheckOut();
     void ClockIn(Uint32 clockTime);
+    void ClockSection(Uint32 clockTime);
     Uint32 LastClockIn();
     void StartedAt(Uint32 startedAt);
     Uint32 StartedAt();
@@ -63,6 +64,12 @@ public:
     Uint32 FastestLapTime();
     int mRequiredPixels = 0;
     bool inFrame = false;
+    int mLastZone = -1;
+    Uint32 mLastZoneTime =0;
+    int mCurrentZone = -1;
+    Uint32 mCurrentZoneTime =0;
+    std::vector<Uint32> mSectionTimes;
+    Uint32 lastZoneClockTimes[25]= {0};; // 25 zones max.
 
 private:
     bool mHasCheckedIn = false;

@@ -205,6 +205,11 @@ bool Race::Draw()
                     }
                     if (ImGui::BeginTabItem("Sections"))
                     {
+                        for (auto& section: racer.second.mSectionTimes)
+                        {
+                            std::string label = racer.second.GetName() + "Section  " + std::to_string(racer.second.mLastZone) + "->" + std::to_string(racer.second.mCurrentZone) + ": ";
+                            ImGui::LabelText(FormatTime(section).c_str(), label.c_str());
+                        }
                         ImGui::EndTabItem();
                     }
                     ImGui::EndTabBar();
@@ -304,12 +309,43 @@ bool Race::Draw()
         ImGui::SliderInt(toleranceLabel.c_str(), &racer.second.mRequiredPixels, 0, 3000);
         if(racer.second.inFrame)
         {
-            ImGui::LabelText("True", "Racer In Frame: ");
+            ImGui::LabelText("True", "Racer In Start/Finish Frame: ");
         }
         else
         {
-            ImGui::LabelText("False", "Racer In Frame: ");
+            ImGui::LabelText("False", "Racer In Start/Finish Frame: ");
         }
+
+        std::string inZonelabel;
+        if (racer.second.mCurrentZone != -1)
+        {
+            if (racer.second.mCurrentZone ==0)
+            {
+               ImGui::LabelText("Start/Finish", "Racer In Zone: ");
+            }
+            else {
+                ImGui::LabelText(std::to_string(racer.second.mCurrentZone).c_str(), "Racer In Zone: ");
+            }
+        }
+        else
+        {
+            ImGui::LabelText("Not in Zone", "Racer In Zone: ");
+        }
+        if (racer.second.mLastZone != -1)
+        {
+            if (racer.second.mLastZone ==0)
+            {
+                ImGui::LabelText("Start/Finish", "Last Zone Racer Was In: ");
+            }
+            else {
+                ImGui::LabelText(std::to_string(racer.second.mLastZone).c_str(), "Last Zone Racer Was In: ");
+            }
+        }
+        else
+        {
+            ImGui::LabelText("Not Seen yet", "Last Zone Racer Was In: ");
+        }
+
         if(GetRaceStatus() == RaceStatus::CHECKING_IN)
         {
             if(racer.second.HasCheckedIn())
@@ -443,8 +479,7 @@ void Race::Update(Camera& raceCamera)
     for(auto& racer : mRacers)
     {
         int channel = 1;
-        std::vector<int> inZones;
-        bool racerInFrame = raceCamera.RacerInFrame(racer.second, inZones);
+        bool racerInFrame = raceCamera.RacerInFrame(racer.second);
         if (racerInFrame) mTotalRacersInFrame.push_back(racer.second);
         if(GetRaceStatus() == RaceStatus::CHECKING_IN && racerInFrame)
         {
@@ -476,6 +511,10 @@ void Race::Update(Camera& raceCamera)
                 racer.second.ClockIn(mCurrentTime);
                 mPositions[racer.second.GetName()].push_back(GetRacerCurrentPosition(racer.second.GetName()));
             }
+        }
+        if(GetRaceStatus() == RaceStatus::RUNNING && racer.second.mCurrentZone != -1 && (mCurrentTime - racer.second.lastZoneClockTimes[racer.second.mCurrentZone] > mRacerClockInDelay))
+        {
+            racer.second.ClockSection(mCurrentTime);
         }
         channel += 1;
     }

@@ -101,6 +101,15 @@ void Racer::ClockIn(Uint32 clockTime)
     mLastClocked = clockTime;
 }
 
+void Racer::ClockSection(Uint32 clockTime)
+{
+    mCurrentZoneTime = clockTime;
+    Uint32 time = mCurrentZoneTime - mLastZoneTime;
+    lastZoneClockTimes[mCurrentZone]= clockTime;
+    mSectionTimes.push_back(time);
+    mLastZoneTime = mCurrentZoneTime;
+}
+
 Uint32 Racer::LastClockIn()
 {
     return mLastClocked;
