@@ -199,7 +199,6 @@ void Camera::Draw()
     {
         DrawZone(mouse_start, ImGui::GetMousePos());
     }
-    ImGui::Text((std::to_string(mouse_in_cam_pos_x) + " " + std::to_string(mouse_in_cam_pos_y)).c_str());
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
     for (int i =0; i < zones.size(); i++)
     {

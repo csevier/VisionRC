@@ -21,6 +21,8 @@ Video playback in offline mode is suppose to match framerate but is slower then 
 Recording isnt working on remote camera? (should i remove remote cam?)
 convert to as close to a c api as possible?
 Test all conditions many times with many racers.
+Auto exposure is lowering framerates, which is expected, but, not highering framerates back when disabled.
+
 
 
 
