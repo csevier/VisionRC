@@ -91,7 +91,7 @@ void Racer::CheckOut()
 void Racer::ClockIn(Uint32 clockTime)
 {
     lapSectionTimes[mLaptimes.size()] = mSectionTimes;
-    if (mSectionTimes.size() > 0)// this means zones are in play and more then just a finish line zone.
+    if (mSectionTimes.size() > 1)// this means zones are in play and more then just a finish line zone.
     {
         Uint32 laptime = 0;
         for (auto time : mSectionTimes)
@@ -118,18 +118,18 @@ void Racer::ClockIn(Uint32 clockTime)
 
 void Racer::ClockSection(Uint32 clockTime)
 {
-    // if (mSectionTimes.size() < 1)
-    // {
-    //     mSectionTimes.push_back(0);
-    // }
-    // else
-    // {
+    if (mSectionTimes.size() < 1)
+    {
+        mSectionTimes.push_back(0);
+    }
+    else
+    {
         mCurrentZoneTime = clockTime;
         Uint32 time = mCurrentZoneTime - mLastZoneTime;
         lastZoneClockTimes[mCurrentZone]= clockTime;
         mSectionTimes.push_back(time);
         mLastZoneTime = mCurrentZoneTime;
-    // }
+    }
 }
 
 Uint32 Racer::LastClockIn()

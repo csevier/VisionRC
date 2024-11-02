@@ -194,12 +194,16 @@ bool Race::Draw()
                         ImGui::PushID(lapi);
                         if (ImGui::TreeNode((label + FormatTime(lapTime)).c_str()))
                         {
-                            for (int i = 0; i < racer.second.lapSectionTimes[lapi].size(); i++)
+                            if (racer.second.lapSectionTimes[lapi].size() > 1)
                             {
-                                std::string label = std::to_string(i + 1) + ": ";
-                                Uint32 sectionTime = racer.second.lapSectionTimes[lapi][i];
-                                ImGui::Text(FormatTime(sectionTime).c_str(), label.c_str(),i);
+                                for (int i = 1; i < racer.second.lapSectionTimes[lapi].size(); i++)
+                                {
+                                    std::string label = std::to_string(i + 1) + ": ";
+                                    Uint32 sectionTime = racer.second.lapSectionTimes[lapi][i];
+                                    ImGui::Text(FormatTime(sectionTime).c_str(), label.c_str(),i);
+                                }
                             }
+
                             ImGui::TreePop();
                         }
                        ImGui::PopID();
@@ -504,7 +508,10 @@ void Race::Update(Camera& raceCamera)
                 mPositions[racer.second.GetName()].push_back(GetRacerCurrentPosition(racer.second.GetName()));
             }
         }
-        if(GetRaceStatus() == RaceStatus::RUNNING && racer.second.mCurrentZone != -1 && (mCurrentTime - racer.second.lastZoneClockTimes[racer.second.mCurrentZone] > mRacerClockInDelay))
+        if(GetRaceStatus() == RaceStatus::RUNNING
+            && racer.second.mCurrentZone != -1
+            && (mCurrentTime - racer.second.lastZoneClockTimes[racer.second.mCurrentZone] > mRacerClockInDelay)
+            && raceCamera.zones.size() > 1)
         {
             racer.second.ClockSection(mCurrentTime);
         }
