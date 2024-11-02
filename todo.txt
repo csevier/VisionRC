@@ -21,6 +21,9 @@ Video playback in offline mode is suppose to match framerate but is slower then 
     -- Okay but the times were DEAD accurate, i wonder if its my own timing math on the video and not on frames.
 Recording isnt working on remote camera? (should i remove remote cam?)
 convert to as close to a c api as possible?
+Test all conditions many times with many racers.
+fix time formatting to be more readable.
+section times seem out of order? time is STILL NOT RIGHT.
 
 
 

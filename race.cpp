@@ -561,6 +561,14 @@ void Race::ExportRace(std::string& location)
             std::string label = racer.second.GetName() + " Lap " + std::to_string(i + 1) + ": ";
             Uint32 lapTime = racer.second.GetLapTimes()[i];
             out << "    " << label + FormatTime(lapTime) << std::endl;
+            if (racer.second.lapSectionTimes[i].size() > 1)
+            {
+                for (int j =1; j <racer.second.lapSectionTimes[i].size(); j++)
+                {
+                    std::string label = racer.second.GetName() + " Section  " + std::to_string(j) + ": ";
+                    out << "         " << label + FormatTime(racer.second.lapSectionTimes[i][j]) << std::endl;
+                }
+            }
         }
         out << std::endl;
         out << std::endl;
