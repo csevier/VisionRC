@@ -91,26 +91,45 @@ void Racer::CheckOut()
 void Racer::ClockIn(Uint32 clockTime)
 {
     lapSectionTimes[mLaptimes.size()] = mSectionTimes;
-    mSectionTimes.clear();
-    if (mLaptimes.size() == 0)
+    if (mSectionTimes.size() > 0)// this means zones are in play and more then just a finish line zone.
     {
-        mLaptimes.push_back(clockTime - mStartedAt);
+        Uint32 laptime = 0;
+        for (auto time : mSectionTimes)
+        {
+            laptime += time;
+        }
+        mLaptimes.push_back(laptime);
+        mSectionTimes.clear();
     }
     else
     {
-        mLaptimes.push_back(clockTime - mLastClocked);
+        mSectionTimes.clear();
+        if (mLaptimes.size() == 0)
+        {
+            mLaptimes.push_back(clockTime - mStartedAt);
+        }
+        else
+        {
+            mLaptimes.push_back(clockTime - mLastClocked);
+        }
     }
     mLastClocked = clockTime;
-
 }
 
 void Racer::ClockSection(Uint32 clockTime)
 {
-    mCurrentZoneTime = clockTime;
-    Uint32 time = mCurrentZoneTime - mLastZoneTime;
-    lastZoneClockTimes[mCurrentZone]= clockTime;
-    mSectionTimes.push_back(time);
-    mLastZoneTime = mCurrentZoneTime;
+    // if (mSectionTimes.size() < 1)
+    // {
+    //     mSectionTimes.push_back(0);
+    // }
+    // else
+    // {
+        mCurrentZoneTime = clockTime;
+        Uint32 time = mCurrentZoneTime - mLastZoneTime;
+        lastZoneClockTimes[mCurrentZone]= clockTime;
+        mSectionTimes.push_back(time);
+        mLastZoneTime = mCurrentZoneTime;
+    // }
 }
 
 Uint32 Racer::LastClockIn()
@@ -140,6 +159,16 @@ void Racer::Reset()
     mLastClocked = 0;
     mStartedAt = 0;
     mLaptimes.clear();
+    lapSectionTimes.clear();
+    mSectionTimes.clear();
+    mLastZone = -1;
+    mLastZoneTime =0;
+    mCurrentZone = -1;
+    mCurrentZoneTime =0;
+    for (int i = 0; i < 25; i++)
+    {
+        lastZoneClockTimes[i] = 0;
+    }
 }
 
 bool Racer::IsOverlapping()
