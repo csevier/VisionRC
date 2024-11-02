@@ -9,7 +9,6 @@ Race Durations with state for racers to finish after the race ended.
 Allow resolution adjustment for camera.
 allow racer name changes.
 should race states be manually changeable Instead of wizard style?
-update export with section info
 polygon zones over squares
 
 Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
@@ -23,7 +22,6 @@ Recording isnt working on remote camera? (should i remove remote cam?)
 convert to as close to a c api as possible?
 Test all conditions many times with many racers.
 fix time formatting to be more readable.
-section times seem out of order? time is STILL NOT RIGHT.
 
 
 
