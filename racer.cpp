@@ -99,11 +99,9 @@ void Racer::ClockIn(Uint32 clockTime)
             laptime += time;
         }
         mLaptimes.push_back(laptime);
-        mSectionTimes.clear();
     }
     else
     {
-        mSectionTimes.clear();
         if (mLaptimes.size() == 0)
         {
             mLaptimes.push_back(clockTime - mStartedAt);
@@ -113,6 +111,7 @@ void Racer::ClockIn(Uint32 clockTime)
             mLaptimes.push_back(clockTime - mLastClocked);
         }
     }
+    mSectionTimes.clear();
     mLastClocked = clockTime;
 }
 
@@ -120,7 +119,10 @@ void Racer::ClockSection(Uint32 clockTime)
 {
     if (mSectionTimes.size() < 1)
     {
+        mCurrentZoneTime = clockTime;
         mSectionTimes.push_back(0);
+        lastZoneClockTimes[mCurrentZone] = clockTime;
+        mLastZoneTime = clockTime;
     }
     else
     {

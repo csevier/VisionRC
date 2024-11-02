@@ -488,6 +488,15 @@ void Race::Update(Camera& raceCamera)
                 racer.second.CheckIn();
             }
         }
+
+        if(GetRaceStatus() == RaceStatus::RUNNING
+            && racer.second.mCurrentZone != -1
+            && (mCurrentTime - racer.second.lastZoneClockTimes[racer.second.mCurrentZone] > mRacerClockInDelay)
+            && raceCamera.zones.size() > 1
+            || (GetRaceStatus() == RaceStatus::RUNNING && racer.second.mSectionTimes.empty()&& racer.second.mCurrentZone ==0)) // call at start.
+        {
+            racer.second.ClockSection(mCurrentTime);
+        }
         if(GetRaceStatus() == RaceStatus::RUNNING && racerInFrame)
         {
             if(racer.second.LastClockIn() == 0)
@@ -507,13 +516,6 @@ void Race::Update(Camera& raceCamera)
                 racer.second.ClockIn(mCurrentTime);
                 mPositions[racer.second.GetName()].push_back(GetRacerCurrentPosition(racer.second.GetName()));
             }
-        }
-        if(GetRaceStatus() == RaceStatus::RUNNING
-            && racer.second.mCurrentZone != -1
-            && (mCurrentTime - racer.second.lastZoneClockTimes[racer.second.mCurrentZone] > mRacerClockInDelay)
-            && raceCamera.zones.size() > 1)
-        {
-            racer.second.ClockSection(mCurrentTime);
         }
         channel += 1;
     }
