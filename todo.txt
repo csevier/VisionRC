@@ -10,6 +10,7 @@ Allow resolution adjustment for camera.
 allow racer name changes.
 should race states be manually changeable Instead of wizard style?
 update export with section info
+polygon zones over squares
 
 Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
 =============
