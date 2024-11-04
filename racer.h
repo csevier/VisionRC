@@ -65,6 +65,7 @@ public:
     Uint32 FastestLapTime();
     int mRequiredPixels = 0;
     bool inFrame = false;
+    bool racerIsDone = false;
     int mLastZone = -1;
     Uint32 mLastZoneTime =0;
     int mCurrentZone = -1;

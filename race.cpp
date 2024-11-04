@@ -72,6 +72,7 @@ bool Race::Draw()
 {
     bool shouldResetToSource = false;
     ImGui::Begin("Race");
+    ImGui::SliderInt("Lap Count", &lapCount, 1, 50);
     int delayInSeconds  = mRacerClockInDelay / 1000;
     if(ImGui::SliderInt("Racer Delay", &delayInSeconds,0,100))
     {
@@ -452,6 +453,23 @@ void Race::Update(Camera& raceCamera)
 {
     if(GetRaceStatus() == RaceStatus::RUNNING)
     {
+	bool allRacersDone = true; 
+        for (auto& racer : mRacers)
+	{
+           if(racer.second.GetTotalLaps() <  lapCount)
+	   {
+		allRacersDone = false;
+		racer.second.racerIsDone = false;
+	   }
+	   else 
+	   {
+	       racer.second.racerIsDone = true;
+	   } 
+	}
+	if (allRacersDone)
+	{
+	    EndRace();
+	}
         if (raceCamera.IsVideoOver())
         {
             EndRace();
@@ -474,6 +492,7 @@ void Race::Update(Camera& raceCamera)
     }
     for(auto& racer : mRacers)
     {
+	if (racer.second.racerIsDone) continue;
         int channel = 1;
         bool racerInFrame = raceCamera.RacerInFrame(racer.second);
         if (racerInFrame) mTotalRacersInFrame.push_back(racer.second);

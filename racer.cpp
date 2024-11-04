@@ -167,6 +167,7 @@ void Racer::Reset()
     mLastZoneTime =0;
     mCurrentZone = -1;
     mCurrentZoneTime =0;
+    racerIsDone = false;
     for (int i = 0; i < 25; i++)
     {
         lastZoneClockTimes[i] = 0;

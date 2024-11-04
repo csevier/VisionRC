@@ -35,6 +35,7 @@ public:
     void ExportColors(std::string& location);
     void ImportColors(std::string& location);
     std::vector<Racer> GetRacePositions();
+    int lapCount = 1;
 
 private:
     std::map<std::string, Racer> mRacers;
