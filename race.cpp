@@ -38,6 +38,12 @@ Race::Race()
     {
         printf( "Failed to load tone effect! SDL_mixer Error: %s\n", Mix_GetError() );
     }
+    mToneHighSFX = Mix_LoadWAV( "tone_high.wav" );
+    if( mToneHighSFX == NULL )
+    {
+        printf( "Failed to load tone high effect! SDL_mixer Error: %s\n", Mix_GetError() );
+    }
+
     mRaceEndedSFX = Mix_LoadWAV( "race_ended.wav" );
     if( mRaceEndedSFX == NULL )
     {
@@ -52,7 +58,13 @@ Race::Race()
     mCheckinSFX = Mix_LoadWAV( "race_checkin.wav" );
     if( mCheckinSFX == NULL )
     {
-        printf( "Failed to load started effect! SDL_mixer Error: %s\n", Mix_GetError() );
+        printf( "Failed to load checkin effect! SDL_mixer Error: %s\n", Mix_GetError() );
+    }
+
+    mRaceStartingSFX = Mix_LoadWAV( "race_starting.wav" );
+    if( mRaceStartingSFX == NULL )
+    {
+	printf( "Failed to load started effect! SDL_mixer Error: %s\n", Mix_GetError() );
     }
     mStatus = RaceStatus::NOT_STARTED;
 }
@@ -138,6 +150,9 @@ bool Race::Draw()
             StartRace();
         }
         break;
+    case RaceStatus::COUNTING_DOWN:
+	ImGui::LabelText("Counting Down!", "Status: ");
+	break;
     case RaceStatus::RUNNING:
         ImGui::LabelText("Racing!", "Status: ");
         if (ImGui::Button("End Race"))
@@ -421,7 +436,7 @@ void Race::StartRace()
 {
     if (Mix_Playing(3) !=1)
     {
-        Mix_PlayChannel(3, mRaceStartedSFX, 0 );
+        Mix_PlayChannel(3, mToneHighSFX, 0 );
     }
     mRaceStartedAt = SDL_GetTicks();
     mStatus = RaceStatus::RUNNING;
@@ -449,8 +464,48 @@ void Race::Reset()
     }
 }
 
+void Race::StartCountdown()
+{   
+    if (Mix_Playing(2) !=1)
+    {
+        Mix_PlayChannel(2, mRaceStartingSFX, 0 );
+    }
+
+    mStatus = RaceStatus::COUNTING_DOWN;
+    countDownStartedAt = SDL_GetTicks();
+    lastCountDownTonePlayedAt = SDL_GetTicks();
+
+}
+
 void Race::Update(Camera& raceCamera)
 {
+
+    if(GetRaceStatus() == RaceStatus::CHECKING_IN)
+    {
+        bool allRacersCheckedIn = std::all_of(mRacers.begin(), mRacers.end(),[](auto &racer) { return racer.second.HasCheckedIn();});
+        if (allRacersCheckedIn)
+	{
+	    StartCountdown();	
+	}
+    }
+    if(GetRaceStatus() == RaceStatus::COUNTING_DOWN)
+    {
+        if (SDL_GetTicks() - countDownStartedAt > 10000) 
+        {
+	    countDownStartedAt = 0;
+            lastCountDownTonePlayedAt = 0;
+            StartRace();
+        }
+        else if ( SDL_GetTicks() - lastCountDownTonePlayedAt > 1000)
+	{
+	    if(Mix_Playing(1) != 1)
+	    {
+                Mix_PlayChannel(1, mToneSFX, 0 );
+                lastCountDownTonePlayedAt = SDL_GetTicks();
+            }
+        }
+
+    }
     if(GetRaceStatus() == RaceStatus::RUNNING)
     {
 	bool allRacersDone = true; 

@@ -13,6 +13,7 @@ enum RaceStatus
 {
     NOT_STARTED,
     CHECKING_IN,
+    COUNTING_DOWN,
     RUNNING,
     ENDED
 };
@@ -31,11 +32,14 @@ public:
     void StartRace();
     void EndRace();
     void Reset();
+    void StartCountdown();
     void ExportRace(std::string& location);
     void ExportColors(std::string& location);
     void ImportColors(std::string& location);
     std::vector<Racer> GetRacePositions();
     int lapCount = 1;
+    Uint32 countDownStartedAt = 0;
+    Uint32 lastCountDownTonePlayedAt = 0; 
 
 private:
     std::map<std::string, Racer> mRacers;
@@ -56,8 +60,10 @@ private:
     std::string mSelectRecordingLocation;
     Mix_Chunk* mToneSFX = nullptr;
     Mix_Chunk* mRaceStartedSFX = nullptr;
+    Mix_Chunk* mRaceStartingSFX = nullptr;
     Mix_Chunk* mRaceEndedSFX = nullptr;
     Mix_Chunk* mCheckinSFX = nullptr;
+    Mix_Chunk* mToneHighSFX = nullptr;
 };
 
 extern Race CURRENT_RACE;
