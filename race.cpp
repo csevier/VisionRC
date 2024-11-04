@@ -152,6 +152,11 @@ bool Race::Draw()
         break;
     case RaceStatus::COUNTING_DOWN:
 	ImGui::LabelText("Counting Down!", "Status: ");
+        if (ImGui::Button("New Race"))
+        {
+            Reset();
+        }
+
 	break;
     case RaceStatus::RUNNING:
         ImGui::LabelText("Racing!", "Status: ");
@@ -458,6 +463,8 @@ void Race::Reset()
     mCurrentTime = 0;
     mRaceStartedAt = 0;
     mRaceEndedAt = 0;
+    countDownStartedAt =0;
+    lastCountDownTonePlayedAt = 0;
     for(auto& racer : mRacers)
     {
         racer.second.Reset();
@@ -490,20 +497,29 @@ void Race::Update(Camera& raceCamera)
     }
     if(GetRaceStatus() == RaceStatus::COUNTING_DOWN)
     {
-        if (SDL_GetTicks() - countDownStartedAt > 10000) 
+        if (SDL_GetTicks() - countDownStartedAt >= 10000) 
         {
 	    countDownStartedAt = 0;
             lastCountDownTonePlayedAt = 0;
             StartRace();
         }
-        else if ( SDL_GetTicks() - lastCountDownTonePlayedAt > 1000)
+        else if (SDL_GetTicks() - countDownStartedAt >= 7000 && (SDL_GetTicks() - lastCountDownTonePlayedAt) >1000)
 	{
-	    if(Mix_Playing(1) != 1)
-	    {
-                Mix_PlayChannel(1, mToneSFX, 0 );
-                lastCountDownTonePlayedAt = SDL_GetTicks();
-            }
+            Mix_PlayChannel(1, mToneSFX, 0 );
+            lastCountDownTonePlayedAt = SDL_GetTicks();
         }
+        else if (SDL_GetTicks() - countDownStartedAt >= 8000 &&  (SDL_GetTicks() - lastCountDownTonePlayedAt) >1000)
+	{
+            Mix_PlayChannel(1, mToneSFX, 0 );
+            lastCountDownTonePlayedAt = SDL_GetTicks();
+        }
+	else if (SDL_GetTicks() - countDownStartedAt >= 9000 &&  (SDL_GetTicks() - lastCountDownTonePlayedAt) >1000)
+	{
+            Mix_PlayChannel(1, mToneSFX, 0 );
+            lastCountDownTonePlayedAt = SDL_GetTicks();
+        }
+
+
 
     }
     if(GetRaceStatus() == RaceStatus::RUNNING)
