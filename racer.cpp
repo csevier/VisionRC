@@ -249,3 +249,25 @@ Uint32 Racer::FastestLapTime()
     }
     return fastestLapTime;
 }
+
+Uint32 Racer::SlowestLapTime()
+{
+    Uint32 slowestLapTime =0;
+    if (GetTotalLaps() == 0)
+    {
+        return slowestLapTime;
+    }
+    else
+    {
+        slowestLapTime = mLaptimes[0];
+    }
+
+    for (auto& n : mLaptimes)
+    {
+        if (n > slowestLapTime)
+        {
+            slowestLapTime = n ;
+        }
+    }
+    return slowestLapTime;
+}

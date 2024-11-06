@@ -213,6 +213,17 @@ bool Race::Draw()
                         std::string label = racer.second.GetName() + " Lap " + std::to_string(lapi + 1) + ": ";
                         Uint32 lapTime = racer.second.GetLapTimes()[lapi];
                         ImGui::PushID(lapi);
+                        bool pushedStyle = false;
+                        if (lapTime == racer.second.FastestLapTime())
+                        {
+                            ImGui::PushStyleColor(ImGuiCol_Text,ImVec4(0,1,0,1));
+                            pushedStyle = true;
+                        }
+                        else if (lapTime == racer.second.SlowestLapTime())
+                        {
+                            ImGui::PushStyleColor(ImGuiCol_Text,ImVec4(1,0,0,1));
+                            pushedStyle = true;
+                        }
                         if (ImGui::TreeNode((label + FormatTime(lapTime)).c_str()))
                         {
                             if (racer.second.lapSectionTimes[lapi].size() > 1)
@@ -226,6 +237,10 @@ bool Race::Draw()
                             }
 
                             ImGui::TreePop();
+                        }
+                        if (pushedStyle)
+                        {
+                            ImGui::PopStyleColor(1);
                         }
                        ImGui::PopID();
                     }
@@ -499,48 +514,35 @@ void Race::Update(Camera& raceCamera)
     {
         if (SDL_GetTicks() - countDownStartedAt >= 10000) 
         {
-	    countDownStartedAt = 0;
+            countDownStartedAt = 0;
             lastCountDownTonePlayedAt = 0;
             StartRace();
         }
         else if (SDL_GetTicks() - countDownStartedAt >= 7000 && (SDL_GetTicks() - lastCountDownTonePlayedAt) >1000)
-	{
+        {
             Mix_PlayChannel(1, mToneSFX, 0 );
             lastCountDownTonePlayedAt = SDL_GetTicks();
         }
-        else if (SDL_GetTicks() - countDownStartedAt >= 8000 &&  (SDL_GetTicks() - lastCountDownTonePlayedAt) >1000)
-	{
-            Mix_PlayChannel(1, mToneSFX, 0 );
-            lastCountDownTonePlayedAt = SDL_GetTicks();
-        }
-	else if (SDL_GetTicks() - countDownStartedAt >= 9000 &&  (SDL_GetTicks() - lastCountDownTonePlayedAt) >1000)
-	{
-            Mix_PlayChannel(1, mToneSFX, 0 );
-            lastCountDownTonePlayedAt = SDL_GetTicks();
-        }
-
-
-
     }
     if(GetRaceStatus() == RaceStatus::RUNNING)
     {
-	bool allRacersDone = true; 
+        bool allRacersDone = true;
         for (auto& racer : mRacers)
-	{
-           if(racer.second.GetTotalLaps() <  lapCount)
-	   {
-		allRacersDone = false;
-		racer.second.racerIsDone = false;
-	   }
-	   else 
-	   {
-	       racer.second.racerIsDone = true;
-	   } 
-	}
-	if (allRacersDone)
-	{
-	    EndRace();
-	}
+        {
+            if(racer.second.GetTotalLaps() <  lapCount)
+            {
+                allRacersDone = false;
+                racer.second.racerIsDone = false;
+            }
+            else
+            {
+               racer.second.racerIsDone = true;
+            }
+        }
+        if (allRacersDone)
+        {
+            EndRace();
+        }
         if (raceCamera.IsVideoOver())
         {
             EndRace();
@@ -563,7 +565,7 @@ void Race::Update(Camera& raceCamera)
     }
     for(auto& racer : mRacers)
     {
-	if (racer.second.racerIsDone) continue;
+        if (racer.second.racerIsDone) continue;
         int channel = 1;
         bool racerInFrame = raceCamera.RacerInFrame(racer.second);
         if (racerInFrame) mTotalRacersInFrame.push_back(racer.second);
@@ -609,7 +611,7 @@ void Race::Update(Camera& raceCamera)
         }
         channel += 1;
     }
-        mHasOverlappingRacers = mTotalRacersInFrame.size() >1;
+    mHasOverlappingRacers = mTotalRacersInFrame.size() >1;
 }
 
 std::string Race::FormatTime(Uint32 time)

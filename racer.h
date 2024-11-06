@@ -63,6 +63,7 @@ public:
     Uint32 GetTotalTime();
     Uint32 AverageLapTime();
     Uint32 FastestLapTime();
+    Uint32 SlowestLapTime();
     int mRequiredPixels = 0;
     bool inFrame = false;
     bool racerIsDone = false;
