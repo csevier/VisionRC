@@ -62,7 +62,7 @@ void Camera::NextFrame()
     }
     cv::Mat currentFrameBGR;
     cv::Mat currentFrameHSV;
-    mVideo >> currentFrameBGR;;
+    mVideo >> currentFrameBGR;
     cv::cvtColor(currentFrameBGR, currentFrameHSV,cv::COLOR_BGR2HSV_FULL);
     mFrameTimeStamp = std::chrono::system_clock::now();
     mMasks["main_bgr"]->SetMatrix(currentFrameBGR);

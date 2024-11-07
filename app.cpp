@@ -8,6 +8,7 @@
 #include <opencv2/objdetect.hpp>
 #include <opencv2/opencv.hpp>
 #include <imgui.h>
+#include <string_view>
 #include <imfilebrowser.h>
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
@@ -49,9 +50,6 @@ int App::Initialize_Subsystems()
         SDL_Log("Error creating SDL_Renderer!");
         return -1;
     }
-    //SDL_RendererInfo info;
-    //SDL_GetRendererInfo(renderer, &info);
-    //SDL_Log("Current SDL_Renderer: %s", info.name);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -70,22 +68,6 @@ int App::Initialize_Subsystems()
     ImGui_ImplSDL2_InitForSDLRenderer(mWindow, mRenderer);
     ImGui_ImplSDLRenderer2_Init(mRenderer);
 
-    // Load Fonts
-    // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
-    // - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
-    // - If the file cannot be loaded, the function will return a nullptr. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
-    // - The fonts will be rasterized at a given size (w/ oversampling) and stored into a texture when calling ImFontAtlas::Build()/GetTexDataAsXXXX(), which ImGui_ImplXXXX_NewFrame below will call.
-    // - Use '#define IMGUI_ENABLE_FREETYPE' in your imconfig file to use Freetype for higher quality font rendering.
-    // - Read 'docs/FONTS.md' for more instructions and details.
-    // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
-    //io.Fonts->AddFontDefault();
-    //io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
-    //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
-    //IM_ASSERT(font != nullptr);
-
 
     return 1;
 
@@ -101,13 +83,17 @@ int App::Run()
     std::unique_ptr<Camera> race_camera = nullptr;
 
     // Main loop
+    bool hasCheckedForSources = false;
     bool done = false;
     unsigned int a = 0;
     unsigned int b = 0;
     double delta = 0;
     double desiredFPS = 30;
+    static int currentCamId = -1;
     ImGui::FileBrowser fileDialog;
     std::string  errorMessage;
+     //std::map<int, std::unique_ptr<Camera>> availableSources;
+    std::vector<std::unique_ptr<Camera>> availableSources;
     fileDialog.SetTitle("Offline Race Source");
     fileDialog.SetTypeFilters({ ".mp4"});
     while (!done)
@@ -142,14 +128,6 @@ int App::Run()
             ImGui_ImplSDLRenderer2_NewFrame();
             ImGui_ImplSDL2_NewFrame();
             ImGui::NewFrame();
-            //ImDrawList* draw_list = ImGui::GetWindowDrawList();
-            //ImGui::Draw
-            //for (auto&  zone : zones)
-            //{
-                //draw_list->AddRect(zone.first, zone.second, IM_COL32_WHITE, 0.0f, ImDrawFlags_None, 4.0f);
-                //draw_list->AddRect(ImVec2(50, 50),ImVec2(55, 55), IM_COL32_WHITE, 0.0f, ImDrawFlags_None, 4.0f);
-                //draw_list->AddRect(ImVec2(x /2, 2), ImVec2(y /2, 2), IM_COL32(255, 0, 0, 128), 0.0f, ImDrawFlags_None, 1.0f);
-            //}
             if (race_camera != nullptr)
             {
                 desiredFPS = race_camera->GetCameraFPS();
@@ -158,7 +136,12 @@ int App::Run()
                 race_camera->Draw();
                 if(CURRENT_RACE.Draw())
                 {
-                    race_camera.reset();
+                    if(currentCamId != -1)
+                    {
+                        availableSources.clear();
+                        currentCamId = -1;
+                        hasCheckedForSources = false;
+                    }
                     race_camera = nullptr;
                 }
                 ImGui::Begin("Timing Fidelity");
@@ -176,24 +159,39 @@ int App::Run()
             else
             {
                 ImGui::Begin("Select Race Camera Source");
-                if(ImGui::Button("Live From USB Camera"))
+                if (!availableSources.empty())
                 {
-                    for (int i = 0; i < 11; i++)
+                    errorMessage.clear();
+                    std::string sourcesFromVec;
+                    for(int i = 0; i < availableSources.size(); i ++)
                     {
-                        try
-                        {
-                            race_camera = std::make_unique<Camera>(mRenderer, 0);
-                            errorMessage.clear();
-                            break;
-                        }
-                        catch(std::exception ex)
-                        {
-                            errorMessage = "No usb camera found, is one plugged in and not already in use?";
-                        }
+                         sourcesFromVec += std::to_string(i) +'\0';
                     }
-
+                    if (ImGui::Combo("Live From USB Source", &currentCamId, sourcesFromVec.c_str()))
+                    {
+                        race_camera = std::move(availableSources[currentCamId]);
+                    }
                 }
-                ImGui::SameLine();
+                else
+                {
+                    if(!hasCheckedForSources)
+                    {
+                        for (int i = 0; i < 15; i++)
+                        {
+                            try
+                            {
+                                std::unique_ptr<Camera> cam = std::make_unique<Camera>(mRenderer, i);
+                                availableSources.push_back(std::move(cam));
+                                errorMessage.clear();
+                            }
+                            catch(std::exception ex)
+                            {
+                                errorMessage = "No usb camera found, is one plugged in and not already in use?";
+                            }
+                        }
+                        hasCheckedForSources = true;
+                    }
+                }
                 if(ImGui::Button("Live From IP Camera"))
                 {
                     ImGui::OpenPopup("IpCam");
