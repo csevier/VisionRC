@@ -398,7 +398,7 @@ double Camera::FrameAsTime(int frame)
 
 std::string Camera::FormatTime(double time)
 {
-    std::chrono::milliseconds ms((int)time *1000);
+    std::chrono::milliseconds ms(int(time *1000));
     auto secs = std::chrono::duration_cast<std::chrono::seconds>(ms);
     ms -= std::chrono::duration_cast<std::chrono::milliseconds>(secs);
     auto mins = std::chrono::duration_cast<std::chrono::minutes>(secs);
@@ -406,7 +406,36 @@ std::string Camera::FormatTime(double time)
     auto hour = std::chrono::duration_cast<std::chrono::hours>(mins);
     mins -= std::chrono::duration_cast<std::chrono::minutes>(hour);
     std::stringstream out;
-    out << mins.count() << ":" << secs.count() << ":" << ms.count();
+    if (mins.count() < 10)
+    {
+        out << "0" << mins.count();
+    }
+    else
+    {
+        out << mins.count();
+    }
+    out << ":";
+    if (secs.count() < 10)
+    {
+        out << "0" << secs.count();
+    }
+    else
+    {
+        out << secs.count();
+    }
+    out << ":";
+    if (ms.count() < 10)
+    {
+        out << "00" << ms.count();
+    }
+    else if (ms.count() < 100)
+    {
+        out << "0" << ms.count();
+    }
+    else
+    {
+        out << ms.count();
+    }
     return out.str();
 }
 

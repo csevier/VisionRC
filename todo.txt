@@ -3,7 +3,7 @@ Features for v1
 Post race visualization graphs.
 Pre-configured layouts for selection. Well better layouting in general at start.
 dynamic screen resolution for app itself.
-Allow editable track times for error correct.* (perhaps add a button that manually stamps a lap for a racer when in offline mode?)
+Allow editable track times for error correct.* (perhaps add a button that manually stamps a lap for a racer when in offline mode? Maybe this is not possible.)
 Improve all audio. (ie maybe reconsider my voice on the states? How does this effect localization?)
 polygon zones over squares
 
