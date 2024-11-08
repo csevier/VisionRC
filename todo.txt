@@ -1,9 +1,8 @@
 Features for v1
 =============
-Post race visualization graphs.
-Show also racers lap average when race ends.
-Pre-configured layouts for selection. Well better layouting in general at start.
-dynamic screen resolution for app itself.
+Pre-configured window layouts for selection. Well better layouting in general at start.
+dynamic screen resolution for app itself. (its currently hardcoded at 1920x 1080, this wont fly)
+better visualize sample color when hovering mouse for color select
 Improve all audio. (ie maybe reconsider my voice on the states? How does this effect localization?)
 polygon zones over squares
 
@@ -20,9 +19,6 @@ Features v2 or bugs?
 Allow editable track times for error correct.* (perhaps add a button that manually stamps a lap for a racer when in offline mode? Maybe this is not possible.)
    - I have some ideas on how to make this possible in offline mode. Use a mark start/end appraoch.
     Allow a button to make 2 marks. and then allow right click on lap section to click "fix".
-Video playback in offline mode is suppose to match framerate but is slower then actual time.?!?!?s
-    -- Okay but the times were DEAD accurate, i wonder if its my own timing math on the video and not on frames.
-convert to as close to a c api as possible? (idk if its worth it at this point)
 
 
 
