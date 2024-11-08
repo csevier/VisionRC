@@ -189,6 +189,7 @@ bool Race::Draw()
         mExportDialogue.ClearSelected();
     }
     mExportDialogue.Display();
+    ImGui::Checkbox("Autostart", &autoStart);
     ImGui::LabelText(FormatTime(mCurrentTime).c_str(), "Race Timer: ");
     ImGui::End();
 
@@ -505,10 +506,10 @@ void Race::Update(Camera& raceCamera)
     if(GetRaceStatus() == RaceStatus::CHECKING_IN)
     {
         bool allRacersCheckedIn = std::all_of(mRacers.begin(), mRacers.end(),[](auto &racer) { return racer.second.HasCheckedIn();});
-        if (allRacersCheckedIn)
-	{
-	    StartCountdown();	
-	}
+        if (allRacersCheckedIn && autoStart)
+        {
+            StartCountdown();
+        }
     }
     if(GetRaceStatus() == RaceStatus::COUNTING_DOWN)
     {

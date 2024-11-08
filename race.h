@@ -39,7 +39,8 @@ public:
     std::vector<Racer> GetRacePositions();
     int lapCount = 1;
     Uint32 countDownStartedAt = 0;
-    Uint32 lastCountDownTonePlayedAt = 0; 
+    Uint32 lastCountDownTonePlayedAt = 0;
+    bool autoStart = false;
 
 private:
     std::map<std::string, Racer> mRacers;
