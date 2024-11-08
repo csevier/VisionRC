@@ -205,6 +205,7 @@ bool Race::Draw()
                 {
                     ImGui::LabelText(FormatTime(racer.second.StartedAt()).c_str(), "Started at: ");
                 }
+                ImGui::LabelText(FormatTime(racer.second.AverageLapTime()).c_str(), "Lap Average: ");
                 if (ImGui::TreeNode("Laps"))
                 {
                     for(int lapi = 0; lapi < racer.second.GetLapTimes().size(); lapi++)
