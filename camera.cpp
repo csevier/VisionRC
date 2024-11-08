@@ -28,7 +28,15 @@ Camera::Camera(SDL_Renderer* renderer, std::string filenameOrIp, bool isOffline)
 Camera::Camera(SDL_Renderer* renderer, int id)
 {
     mRenderer = renderer;
-    mVideo = cv::VideoCapture(id, cv::CAP_V4L2);
+    #ifdef __linux__
+        mVideo = cv::VideoCapture(id, cv::CAP_V4L2);
+    #elif _WIN32
+        mVideo = cv::VideoCapture(id);
+    #elif __APPLE__
+        mVideo = cv::VideoCapture(id);
+    #endif
+
+
     if(!mVideo.isOpened())
     {
         throw std::exception();

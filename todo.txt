@@ -5,11 +5,12 @@ dynamic screen resolution for app itself. (its currently hardcoded at 1920x 1080
 better visualize sample color when hovering mouse for color select
 Improve all audio. (ie maybe reconsider my voice on the states? How does this effect localization?)
 polygon zones over squares
+Package it up!! were done soon.
+    - need to statically compile in dependencies and test ALL PLATFORMS
 
 Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
 =============
 deleted racers need their masks deleted as well
-Dont usem v4l2 camera backend, needs to be cross plat.
 Recording isnt working on remote camera? (should i remove remote cam?)
 Test all conditions many times with many racers.
 Auto exposure is lowering framerates, which is expected, but, not highering framerates back when disabled.
