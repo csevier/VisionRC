@@ -84,7 +84,7 @@ bool Race::Draw()
 {
     bool shouldResetToSource = false;
     ImGui::Begin("Race");
-    ImGui::SliderInt("Lap Count", &lapCount, 1, 50);
+    ImGui::SliderInt("Lap Count", &lapCount, 1, 500);
     int delayInSeconds  = mRacerClockInDelay / 1000;
     if(ImGui::SliderInt("Racer Delay", &delayInSeconds,0,100))
     {
