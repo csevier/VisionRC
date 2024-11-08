@@ -21,6 +21,7 @@ Camera::Camera(SDL_Renderer* renderer, std::string filenameOrIp, bool isOffline)
     mCameraFPS = mVideo.get(cv::CAP_PROP_FPS);
     mMasks["main_hsv"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["main_bgr"] =  std::make_unique<CameraFrame>(renderer);
+    mMasks["select_color_filtered"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["select_color"] =  std::make_unique<CameraFrame>(renderer);
     mIsOfflineMode = isOffline;
 }
@@ -52,6 +53,7 @@ Camera::Camera(SDL_Renderer* renderer, int id)
     mCameraFPS = mVideo.get(cv::CAP_PROP_FPS);
     mMasks["main_hsv"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["main_bgr"] =  std::make_unique<CameraFrame>(renderer);
+    mMasks["select_color_filtered"] =  std::make_unique<CameraFrame>(renderer);
     mMasks["select_color"] =  std::make_unique<CameraFrame>(renderer);
     mIsOfflineMode = false;
 }
@@ -375,11 +377,17 @@ ImVec2 Camera::RaceCamToMouseCoords(ImVec2 race_cam_min_loc, ImVec2 raceCam)
 void Camera::UpdateColorSelectFrame()
 {
     cv::Scalar colorAtCursor = cv::Scalar(mRacerColorFromMouseHSV255.x,mRacerColorFromMouseHSV255.y,mRacerColorFromMouseHSV255.z);
-    cv::inRange( mMasks["main_hsv"]->GetMatrix(),colorAtCursor,colorAtCursor, mMasks["select_color"]->GetMatrix());
+    cv::inRange( mMasks["main_hsv"]->GetMatrix(),colorAtCursor,colorAtCursor, mMasks["select_color_filtered"]->GetMatrix());
     cv::Mat out;
-    cv::cvtColor(mMasks["select_color"]->GetMatrix(), out, cv::COLOR_GRAY2BGR);
+    cv::cvtColor(mMasks["select_color_filtered"]->GetMatrix(), out, cv::COLOR_GRAY2BGR);
     cv::bitwise_and( mMasks["main_bgr"]->GetMatrix(),out, out);
+    mMasks["select_color_filtered"]->SetMatrix(out);
+    cv::Mat colorSelect;
+    mMasks["main_hsv"]->GetMatrix().copyTo(colorSelect); // sets correct size and params
+    colorSelect.setTo(colorAtCursor);
+    cv::cvtColor(colorSelect, out, cv::COLOR_HSV2BGR_FULL);
     mMasks["select_color"]->SetMatrix(out);
+
 }
 
 void Camera::Record(std::string& location)

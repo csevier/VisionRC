@@ -2,7 +2,6 @@ Features for v1
 =============
 Pre-configured window layouts for selection. Well better layouting in general at start.
 dynamic screen resolution for app itself. (its currently hardcoded at 1920x 1080, this wont fly)
-better visualize sample color when hovering mouse for color select
 Improve all audio. (ie maybe reconsider my voice on the states? How does this effect localization?)
 polygon zones over squares
 Package it up!! were done soon.
