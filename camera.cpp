@@ -302,6 +302,27 @@ void Camera::Draw()
             NextFrame();
             mPause = true;
         }
+        ImGui::SameLine();
+        if(ImGui::Button("Mark"))
+        {
+            if (markOne ==0)
+            {
+                markOne = FrameAsTime(mCurrentFrame);
+            }
+            else
+            {
+                markTwo = FrameAsTime(mCurrentFrame);
+            }
+        }
+        ImGui::SameLine();
+        if(ImGui::Button("Clear Marks"))
+        {
+            markOne = 0;
+            markTwo = 0;
+        }
+        ImGui::SameLine();
+        std::string frame_mark_label = FormatTime(markOne) + " - " + FormatTime(markTwo);
+        ImGui::Text("%s", frame_mark_label.c_str());
         if (ImGui::SliderInt("Time", &mCurrentFrame, 0, mFrameCount, FormatTime(FrameAsTime(mCurrentFrame)).c_str()))
         {
             mPause = false;

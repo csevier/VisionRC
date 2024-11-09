@@ -26,7 +26,7 @@ public:
     void RemoveRacer(std::string racerName);
     std::map<std::string, Racer>& GetRacers();
     void Update(Camera& raceCamera);
-    bool Draw();
+    bool Draw(Camera& raceCamera);
     RaceStatus GetRaceStatus();
     void StartCheckIn();
     void StartRace();

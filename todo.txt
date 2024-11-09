@@ -1,6 +1,5 @@
 Features for v1
 =============
-Pre-configured window layouts for selection. Well better layouting in general at start.
 Improve all audio. (ie maybe reconsider my voice on the states? How does this effect localization?)
 polygon zones over squares
 Package it up!! were done soon.
@@ -10,13 +9,11 @@ Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
 =============
 Recording isnt working on remote camera? (should i remove remote cam?)
 Test all conditions many times with many racers.
-
-Features v2 or bugs?
-===========
-Allow editable track times for error correct.* (perhaps add a button that manually stamps a lap for a racer when in offline mode? Maybe this is not possible.)
-   - I have some ideas on how to make this possible in offline mode. Use a mark start/end appraoch.
-    Allow a button to make 2 marks. and then allow right click on lap section to click "fix".
-
+Work on all aspects of usablility
+     - Sets of pre-configured window layouts
+     - Fix that vertical scrolls is always now required on race cam.
+     - Intuitive Docs
+     - Intuitive Video Course
 
 
 

@@ -81,7 +81,7 @@ void Race::RemoveRacer(std::string racerName)
     removedRacers.push_back(racerName);
 }
 
-bool Race::Draw()
+bool Race::Draw(Camera& raceCamera)
 {
     bool shouldResetToSource = false;
     ImGui::Begin("Race");
@@ -211,8 +211,8 @@ bool Race::Draw()
                 {
                     for(int lapi = 0; lapi < racer.second.GetLapTimes().size(); lapi++)
                     {
-                        if (lapi == 0)
-                            ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+                        // if (lapi == 0)
+                        //     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
                         std::string label = racer.second.GetName() + " Lap " + std::to_string(lapi + 1) + ": ";
                         Uint32 lapTime = racer.second.GetLapTimes()[lapi];
                         ImGui::PushID(lapi);
@@ -236,9 +236,30 @@ bool Race::Draw()
                                     std::string label = std::to_string(i + 1) + ": ";
                                     Uint32 sectionTime = racer.second.lapSectionTimes[lapi][i];
                                     ImGui::Text(FormatTime(sectionTime).c_str(), label.c_str(),i);
+                                    if (raceCamera.mIsOfflineMode && GetRaceStatus() == RaceStatus::ENDED)
+                                    {
+                                        ImGui::SameLine();
+                                        std::string popUpLabel = "Fix Section " + std::to_string(i + 1);
+                                        if (ImGui::Button(popUpLabel.c_str()))
+                                        {
+                                            double sectionTime = raceCamera.markTwo - raceCamera.markOne;
+                                            racer.second.lapSectionTimes[lapi][i] = sectionTime * 1000;
+                                        }
+                                    }
                                 }
                             }
-
+                            else
+                            {   if (raceCamera.mIsOfflineMode && GetRaceStatus() == RaceStatus::ENDED)
+                                {
+                                    ImGui::SameLine();
+                                    std::string popUpLabel = "Fix Lap " + std::to_string(lapi);
+                                    if (ImGui::Button(popUpLabel.c_str()))
+                                    {
+                                        double lapTime = raceCamera.markTwo - raceCamera.markOne;
+                                        racer.second.GetLapTimes()[lapi] = lapTime * 1000;
+                                    }
+                                }
+                            }
                             ImGui::TreePop();
                         }
                         if (pushedStyle)

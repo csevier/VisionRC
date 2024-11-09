@@ -146,7 +146,7 @@ int App::Run()
                 race_camera->NextFrame();
                 CURRENT_RACE.Update(*race_camera);
                 race_camera->Draw();
-                if(CURRENT_RACE.Draw())
+                if(CURRENT_RACE.Draw(*race_camera))
                 {
                     if(currentCamId != -1)
                     {

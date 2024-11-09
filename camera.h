@@ -31,6 +31,9 @@ public:
     ImVec2 mouse_end;
     ImVec2 zone_end;
     bool isDrawingZone = false;
+    bool mIsOfflineMode = false;
+    double markOne = 0;
+    double markTwo = 0;
 
 private:
     void SampleColor(ImVec2 race_cam_min_loc, ImVec2 race_cam_max_loc);
@@ -49,7 +52,6 @@ private:
     bool mUserIsAssigningRacerColor = false;
     int mExposure = 0;
     int mBrightness =0;
-    bool mIsOfflineMode = false;
     bool mPause = false;
     int mFrameCount = 0;
     int mCurrentFrame = 0;
