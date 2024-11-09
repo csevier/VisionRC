@@ -271,3 +271,14 @@ Uint32 Racer::SlowestLapTime()
     }
     return slowestLapTime;
 }
+void Racer::RecalcLapFromSections(int lapIndex)
+{
+    if (lapSectionTimes.size()<lapIndex) return;
+    auto sectionTimes = lapSectionTimes[lapIndex];
+    Uint32 laptime = 0;
+    for (auto time : sectionTimes)
+    {
+        laptime += time;
+    }
+    mLaptimes[lapIndex] = laptime;
+}

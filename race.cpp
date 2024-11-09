@@ -231,19 +231,20 @@ bool Race::Draw(Camera& raceCamera)
                         {
                             if (racer.second.lapSectionTimes[lapi].size() > 1)
                             {
-                                for (int i = 1; i < racer.second.lapSectionTimes[lapi].size(); i++)
+                                for (int i = 1; i < racer.second.lapSectionTimes[lapi].size(); i++) // starts at 1 because first section start at is always marked 0.
                                 {
-                                    std::string label = std::to_string(i + 1) + ": ";
+                                    std::string label = std::to_string(i) + ": ";
                                     Uint32 sectionTime = racer.second.lapSectionTimes[lapi][i];
                                     ImGui::Text(FormatTime(sectionTime).c_str(), label.c_str(),i);
                                     if (raceCamera.mIsOfflineMode && GetRaceStatus() == RaceStatus::ENDED)
                                     {
                                         ImGui::SameLine();
-                                        std::string popUpLabel = "Fix Section " + std::to_string(i + 1);
+                                        std::string popUpLabel = "Fix Section " + std::to_string(i);
                                         if (ImGui::Button(popUpLabel.c_str()))
                                         {
                                             double sectionTime = raceCamera.markTwo - raceCamera.markOne;
                                             racer.second.lapSectionTimes[lapi][i] = sectionTime * 1000;
+                                            racer.second.RecalcLapFromSections(lapi);
                                         }
                                     }
                                 }

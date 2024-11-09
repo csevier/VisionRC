@@ -74,6 +74,7 @@ public:
     std::vector<Uint32> mSectionTimes;
     std::map<int,std::vector<Uint32>> lapSectionTimes;
     Uint32 lastZoneClockTimes[25]= {0};; // 25 zones max.
+    void RecalcLapFromSections(int lapIndex);
 
 private:
     bool mHasCheckedIn = false;
