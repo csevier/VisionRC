@@ -78,6 +78,7 @@ void Race::AddRacer(Racer racer)
 void Race::RemoveRacer(std::string racerName)
 {
     mRacers.erase(racerName);
+    removedRacers.push_back(racerName);
 }
 
 bool Race::Draw()
@@ -503,7 +504,14 @@ void Race::StartCountdown()
 
 void Race::Update(Camera& raceCamera)
 {
-
+    if (!removedRacers.empty())
+    {
+        for (std::string& racerName: removedRacers)
+        {
+            raceCamera.RemoveMask(racerName);
+        }
+        removedRacers.clear();
+    }
     if(GetRaceStatus() == RaceStatus::CHECKING_IN)
     {
         bool allRacersCheckedIn = std::all_of(mRacers.begin(), mRacers.end(),[](auto &racer) { return racer.second.HasCheckedIn();});

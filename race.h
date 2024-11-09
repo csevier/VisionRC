@@ -65,6 +65,7 @@ private:
     Mix_Chunk* mRaceEndedSFX = nullptr;
     Mix_Chunk* mCheckinSFX = nullptr;
     Mix_Chunk* mToneHighSFX = nullptr;
+    std::vector<std::string> removedRacers;
 };
 
 extern Race CURRENT_RACE;

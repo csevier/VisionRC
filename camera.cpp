@@ -258,7 +258,7 @@ void Camera::Draw()
 
     if (!mIsOfflineMode)
     {
-        ImGui::Checkbox("Auto Exposure - Use Only In Volatile light settings with plentiful light.", &mAutoExposure);
+        ImGui::Checkbox("Auto Exposure - Can effect race times in low light settings. Make sure Timing Fidelity is green.", &mAutoExposure);
         if (mAutoExposure)
         {
             mVideo.set(cv::CAP_PROP_AUTO_EXPOSURE, 3);
@@ -481,4 +481,9 @@ bool Camera::IsVideoOver()
         return false;
     }
 
+}
+
+void Camera::RemoveMask(std::string maskName)
+{
+    mMasks.erase(maskName);
 }

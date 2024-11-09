@@ -36,9 +36,21 @@ int App::Initialize_Subsystems()
     SDL_SetHint(SDL_HINT_IME_SHOW_UI, "1");
 #endif
 
+    int width = 1920;
+    int height = 1080;
+    SDL_DisplayMode dm;
+    if (SDL_GetDesktopDisplayMode(0, &dm)!=0)
+    {
+        printf("Error: SDL_GetDesktopDisplayMode(): %s\n", SDL_GetError());
+    }
+    else
+    {
+        width = dm.w;
+        height = dm.h;
+    }
     // Create window with SDL_Renderer graphics context
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-    mWindow = SDL_CreateWindow("VisionRC", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, window_flags);
+    mWindow = SDL_CreateWindow("VisionRC", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, window_flags);
     if (mWindow == nullptr)
     {
         printf("Error: SDL_CreateWindow(): %s\n", SDL_GetError());

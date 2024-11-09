@@ -23,6 +23,7 @@ public:
     void Pause();
     void Unpause();
     bool IsVideoOver();
+    void RemoveMask(std::string maskName);
     bool mAutoExposure = false;
     std::vector<std::pair<ImVec2, ImVec2>> zones;
     ImVec2 mouse_start{-1,-1};
