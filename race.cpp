@@ -250,7 +250,8 @@ bool Race::Draw(Camera& raceCamera)
                                 }
                             }
                             else
-                            {   if (raceCamera.mIsOfflineMode && GetRaceStatus() == RaceStatus::ENDED)
+                            {
+                                if (raceCamera.mIsOfflineMode && GetRaceStatus() == RaceStatus::ENDED)
                                 {
                                     ImGui::SameLine();
                                     std::string popUpLabel = "Fix Lap " + std::to_string(lapi);
