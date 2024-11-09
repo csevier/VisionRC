@@ -2,19 +2,32 @@ Features for v1
 =============
 Improve all audio. (ie maybe reconsider my voice on the states? How does this effect localization?)
 polygon zones over squares
-Package it up!! were done soon.
-    - need to statically compile in dependencies and test ALL PLATFORMS
+
 
 Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
 =============
 Recording isnt working on remote camera? (should i remove remote cam?)
-Test all conditions many times with many racers.
+
 Work on all aspects of usablility
      - Sets of pre-configured window layouts
      - Fix that vertical scrolls is always now required on race cam.
+     - Buttons for race corrections in offline mode are to big.
+
+Test All features on these platforms:
+    - Linux
+    - Windows
+    - Mac
+
+Test Cams
+        - Test with phones tethered as usb cams.
+        - Test with ip cams
+
+Write Documentation
      - Intuitive Docs
      - Intuitive Video Course
 
+Package it up!! were done soon.
+    - need to statically compile in dependencies and test ALL PLATFORMS
 
 
 
