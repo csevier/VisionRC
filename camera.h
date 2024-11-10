@@ -25,12 +25,11 @@ public:
     bool IsVideoOver();
     void RemoveMask(std::string maskName);
     bool mAutoExposure = false;
-    std::vector<std::pair<ImVec2, ImVec2>> zones;
+    std::vector<std::vector<ImVec2>> polyZones;
     ImVec2 mouse_start{-1,-1};
     ImVec2 zone_start{-1,-1};
     ImVec2 mouse_end;
     ImVec2 zone_end;
-    bool isDrawingZone = false;
     bool mIsOfflineMode = false;
     double markOne = 0;
     double markTwo = 0;

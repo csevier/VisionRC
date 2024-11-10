@@ -2,6 +2,7 @@ Features for v1
 =============
 Improve all audio. (ie maybe reconsider my voice on the states? How does this effect localization?)
 polygon zones over squares
+    - I need the ability to use them in the zone calculation.
 need zone export and import
 maybe we should do a bunch of tooltips.
 

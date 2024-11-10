@@ -617,7 +617,7 @@ void Race::Update(Camera& raceCamera)
         if(GetRaceStatus() == RaceStatus::RUNNING
             && racer.second.mCurrentZone != -1
             && (mCurrentTime - racer.second.lastZoneClockTimes[racer.second.mCurrentZone] > mRacerClockInDelay)
-            && raceCamera.zones.size() > 1
+            && raceCamera.polyZones.size() > 1
             || (GetRaceStatus() == RaceStatus::RUNNING && racer.second.mSectionTimes.empty()&& racer.second.mCurrentZone ==0)) // call at start.
         {
             racer.second.ClockSection(mCurrentTime);

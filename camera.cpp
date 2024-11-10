@@ -2,6 +2,8 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "imgui.h"
 #include "race.h"
+#include <cmath>
+#include <iostream>
 
 Camera::Camera(SDL_Renderer* renderer, std::string filenameOrIp, bool isOffline)
 {
@@ -108,20 +110,23 @@ bool Camera::RacerInFrame(Racer& racer)
     cv::bitwise_and(mMasks["main_bgr"]->GetMatrix(),out, out);
     mMasks[racer.GetName()]->SetMatrix(out);
 
-    if (!zones.empty())
+    if (!polyZones.empty())
     {
-        for (int i = 0; i < zones.size(); i++)
+        for (int i = 0; i < polyZones.size(); i++)
         {
-            int row_start = zones[i].first.y;
-            int row_end = zones[i].second.y;
-            cv::Range rowRange = {row_start,row_end};
-            int col_start = zones[i].first.x;
-            int col_end = zones[i].second.x;
-            cv::Range colRange = {col_start,col_end};
-
-            cv::Mat zone_matrix = mMasks["main_hsv"]->GetMatrix()(rowRange,colRange).clone();
+            cv::Mat poly_zone_mask= cv::Mat::zeros(mMasks["main_hsv"]->GetMatrix().rows,mMasks["main_hsv"]->GetMatrix().cols, CV_8UC1);
+            std::vector<std::vector<cv::Point>> cvPointsAll;
+            std::vector<cv::Point> cvPoly;
+            for(ImVec2 p : polyZones[i])
+            {
+                cvPoly.push_back(cv::Point(p.x, p.y));
+            }
+            cvPointsAll.push_back(cvPoly);
+            cv::fillPoly(poly_zone_mask, cvPointsAll, cv::Scalar(255));
+            cv::Mat poly_zone_matrix;
+            mMasks["main_hsv"]->GetMatrix().copyTo(poly_zone_matrix, poly_zone_mask);
             cv::Mat racerMatrix;
-            cv::inRange(zone_matrix,lowerColor,upperColor, racerMatrix);
+            cv::inRange(poly_zone_matrix,lowerColor,upperColor, racerMatrix);
             int resultCount = cv::countNonZero(racerMatrix);
             bool racerInZone = resultCount > racer.mRequiredPixels;
             if (racerInZone && i ==0) // finish line is always zone 0
@@ -179,51 +184,62 @@ void Camera::Draw()
     ImVec2 mouse_pos  = ImGui::GetMousePos();
     float mouse_in_cam_pos_x = mouse_pos.x - race_cam_min_loc.x;
     float mouse_in_cam_pos_y = mouse_pos.y - race_cam_min_loc.y;
-    if (ImGui::IsItemClicked(2))
+    static std::vector<ImVec2> zonePolygon;
+    static bool isDrawingPolyZone = false;
+    if (ImGui::IsItemClicked(2)) // polygon zone.
     {
-        if (mouse_start.x == -1 && mouse_start.y == -1)
+        auto mouse = ImVec2(mouse_in_cam_pos_x, mouse_in_cam_pos_y);
+        if (zonePolygon.size() > 0)
         {
-            mouse_start = mouse_pos;
-            zone_start = ImVec2(mouse_in_cam_pos_x, mouse_in_cam_pos_y);
-            isDrawingZone = true;
+            ImVec2 firstPoint = zonePolygon[0];
+            double distance = sqrt(pow((mouse.x - firstPoint.x),2) + pow((mouse.y - firstPoint.y),2));
+            if (abs(distance) <10) // 10 pixels
+            {
+                polyZones.push_back(zonePolygon);
+                zonePolygon.clear();
+                isDrawingPolyZone = false;
+            }
+            else
+            {
+                zonePolygon.push_back(ImVec2(mouse_in_cam_pos_x, mouse_in_cam_pos_y));
+                isDrawingPolyZone = true;
+            }
         }
         else
         {
-            mouse_end = mouse_pos;
-            zone_end = ImVec2(mouse_in_cam_pos_x, mouse_in_cam_pos_y);
-            // order correctly for later sub matrix
-            int minx = std::min<int>(zone_start.x, zone_end.x);
-            int miny = std::min<int>(zone_start.y, zone_end.y);
-            int maxx = std::max<int>(zone_start.x, zone_end.x);
-            int maxy = std::max<int>(zone_start.y, zone_end.y);
-            ImVec2 topLeft(minx, miny);
-            ImVec2 bottomRight(maxx, maxy);
-            zones.push_back(std::pair<ImVec2, ImVec2>(topLeft, bottomRight));
-            isDrawingZone = false;
-            mouse_start.x = -1;
-            mouse_start.y = -1;
+            zonePolygon.push_back(ImVec2(mouse_in_cam_pos_x, mouse_in_cam_pos_y));
+            isDrawingPolyZone = true;
         }
     }
-    if(isDrawingZone)
+    if(isDrawingPolyZone)
     {
-        DrawZone(mouse_start, ImGui::GetMousePos());
+        ImDrawList* draw_list = ImGui::GetWindowDrawList();
+        if (!zonePolygon.empty()) draw_list->AddCircle(RaceCamToMouseCoords(race_cam_min_loc,zonePolygon[0]), 10.0f,IM_COL32_WHITE);
+        for (ImVec2 p : zonePolygon)
+        {
+            draw_list->PathLineTo(RaceCamToMouseCoords(race_cam_min_loc,p));
+        }
+        draw_list->PathLineTo(mouse_pos);
+        draw_list->PathStroke(IM_COL32_WHITE, ImDrawFlags_None);
     }
-    ImDrawList* draw_list = ImGui::GetWindowDrawList();
-    for (int i =0; i < zones.size(); i++)
+    // and then draw the finished ones filled?.
+    for (int i =0; i < polyZones.size(); i++)
     {
+        ImDrawList* draw_list = ImGui::GetWindowDrawList();
         if (i ==0)
         {
-            draw_list->AddText(RaceCamToMouseCoords(race_cam_min_loc,ImVec2(zones[i].first.x, zones[i].first.y - 15)),IM_COL32_WHITE, "Start/Finish");
+            draw_list->AddText(RaceCamToMouseCoords(race_cam_min_loc,polyZones[i][0]),IM_COL32_WHITE, "Start/Finish");
         }
         else
         {
-            draw_list->AddText(RaceCamToMouseCoords(race_cam_min_loc,ImVec2(zones[i].first.x, zones[i].first.y - 15)),IM_COL32_WHITE,std::to_string(i).c_str());
+            draw_list->AddText(RaceCamToMouseCoords(race_cam_min_loc,polyZones[i][0]),IM_COL32_WHITE, std::to_string(i).c_str());
         }
         auto pos = ImGui::GetCursorScreenPos();
         if (CURRENT_RACE.GetRaceStatus() != RaceStatus::RUNNING)
         {
             // Get the absolute position where you want to place the button
-            ImVec2 buttonPos = RaceCamToMouseCoords(race_cam_min_loc,ImVec2(zones[i].second.x, zones[i].first.y));// Example position
+            ImVec2 coord = RaceCamToMouseCoords(race_cam_min_loc,polyZones[i][0]);
+            ImVec2 buttonPos = ImVec2(coord.x-20, coord.y);// Example position
 
             // Set the cursor position to the desired location
             ImGui::SetCursorScreenPos(buttonPos);
@@ -231,11 +247,15 @@ void Camera::Draw()
             // Create the button
             if (ImGui::Button(("x##" + std::to_string(i)).c_str()))
             {
-                zones.erase(zones.begin()+ i);
+                polyZones.erase(polyZones.begin() +i);
             }
+            ImGui::SetCursorScreenPos(pos);
         }
-        draw_list->AddRect(RaceCamToMouseCoords(race_cam_min_loc,zones[i].first), RaceCamToMouseCoords(race_cam_min_loc,zones[i].second), IM_COL32_WHITE, 0.0f, ImDrawFlags_None, 4.0f);
-        ImGui::SetCursorScreenPos(pos);
+        for (ImVec2 p : polyZones[i])
+        {
+            draw_list->PathLineTo(RaceCamToMouseCoords(race_cam_min_loc,p));
+        }
+        draw_list->PathStroke(IM_COL32_WHITE, ImDrawFlags_Closed);
     }
 
     if (ImGui::BeginPopupContextWindow("my popup"))
@@ -357,12 +377,6 @@ void Camera::Draw()
     }
 
     ImGui::End();
-}
-
-void Camera::DrawZone(ImVec2 mouse_start, ImVec2 mouse_end)
-{
-    ImDrawList* draw_list = ImGui::GetWindowDrawList();
-    draw_list->AddRect(mouse_start,mouse_end,  IM_COL32(255, 0, 0, 255), 0.0f, ImDrawFlags_None, 4.0f);
 }
 
 void Camera::SampleColor(ImVec2 race_cam_min_loc, ImVec2 race_cam_size)

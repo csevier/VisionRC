@@ -89,7 +89,7 @@ int App::Run()
 {
 
     // Our state
-    bool show_demo_window = false;
+    bool show_demo_window = true;
     //ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
     std::unique_ptr<Camera> race_camera = nullptr;
@@ -104,7 +104,6 @@ int App::Run()
     static int currentCamId = -1;
     ImGui::FileBrowser fileDialog;
     std::string  errorMessage;
-     //std::map<int, std::unique_ptr<Camera>> availableSources;
     std::vector<std::unique_ptr<Camera>> availableSources;
     fileDialog.SetTitle("Offline Race Source");
     fileDialog.SetTypeFilters({ ".mp4"});
@@ -130,11 +129,6 @@ int App::Run()
                 if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(mWindow))
                     done = true;
             }
-            // if (SDL_GetWindowFlags(mWindow) & SDL_WINDOW_MINIMIZED)
-            // {
-            //     SDL_Delay(10);
-            //     continue;
-            // }
 
             // Start the Dear ImGui frame
             ImGui_ImplSDLRenderer2_NewFrame();
