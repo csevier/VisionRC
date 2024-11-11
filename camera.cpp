@@ -75,13 +75,10 @@ void Camera::NextFrame()
     cv::Mat currentFrameBGR;
     cv::Mat currentFrameHSV;
     mVideo >> currentFrameBGR;
-    std::cout << "before: " << currentFrameBGR.size() << std::endl;
     if (currentFrameBGR.size().width != 640 || currentFrameBGR.size().height !=480)
     {
-        std::cout << "resized!" << std::endl;
         cv::resize(currentFrameBGR, currentFrameBGR, cv::Size(640, 480), 0, 0, cv::INTER_CUBIC);
     }
-    std::cout << "after: " << currentFrameBGR.size() << std::endl;
     cv::cvtColor(currentFrameBGR, currentFrameHSV,cv::COLOR_BGR2HSV_FULL);
     mFrameTimeStamp = std::chrono::system_clock::now();
     mMasks["main_bgr"]->SetMatrix(currentFrameBGR);
