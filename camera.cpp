@@ -181,8 +181,12 @@ Camera::~Camera()
 void Camera::Draw()
 {
     ImGui::Begin("Race Camera");
-    ImGui::BeginChild("Race Camera",ImVec2(0, 0),ImGuiChildFlags_None, ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
+    ImGui::BeginTabBar("Race Camera");
+    ImGui::BeginTabItem("Race Camera");
     ImGui::Image((void*)mMasks["main_bgr"]->GetTexture(), ImVec2(640,480));
+    ImGui::EndTabItem();
+    ImGui::EndTabBar();
+
     ImVec2 race_cam_min_loc = ImGui::GetItemRectMin();
     ImVec2 race_cam_size = ImGui::GetItemRectSize();
     ImVec2 mouse_pos  = ImGui::GetMousePos();
@@ -278,7 +282,6 @@ void Camera::Draw()
     {
         SampleColor(race_cam_min_loc, race_cam_size);
     }
-    ImGui::EndChild(); // race cam scroll area ending.
 
     if (!mIsOfflineMode)
     {
@@ -367,12 +370,9 @@ void Camera::Draw()
     {
         for (const auto& mask : mMasks )
         {
-
             if (ImGui::BeginTabItem(mask.first.c_str()))
             {
-                ImGui::BeginChild(mask.first.c_str(),ImVec2(0, 0),ImGuiChildFlags_None, ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
                 ImGui::Image((void*)mask.second->GetTexture(), ImVec2(640,480));
-                ImGui::EndChild();
                 ImGui::EndTabItem();
             }
         }
