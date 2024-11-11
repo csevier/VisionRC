@@ -366,7 +366,7 @@ void Camera::Draw()
 
             if (ImGui::BeginTabItem(mask.first.c_str()))
             {
-                ImGui::BeginChild(mask.first.c_str(),ImVec2(0, 0),ImGuiChildFlags_None,ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
+                ImGui::BeginChild(mask.first.c_str(),ImVec2(0, 0),ImGuiChildFlags_None,ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
                 ImGui::Image((void*)mask.second->GetTexture(), ImVec2(mask.second->GetWidth(),mask.second->GetHeight()));
                 ImGui::EndChild();
                 ImGui::EndTabItem();

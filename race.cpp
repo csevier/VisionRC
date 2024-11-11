@@ -239,7 +239,7 @@ bool Race::Draw(Camera& raceCamera)
                                     if (raceCamera.mIsOfflineMode && GetRaceStatus() == RaceStatus::ENDED)
                                     {
                                         ImGui::SameLine();
-                                        std::string popUpLabel = "Fix Section " + std::to_string(i);
+                                        std::string popUpLabel = "Fix Section " + std::to_string(i) + " with: " + FormatTime((raceCamera.markTwo - raceCamera.markOne) * 1000);
                                         if (ImGui::Button(popUpLabel.c_str()))
                                         {
                                             double sectionTime = raceCamera.markTwo - raceCamera.markOne;
@@ -254,7 +254,7 @@ bool Race::Draw(Camera& raceCamera)
                                 if (raceCamera.mIsOfflineMode && GetRaceStatus() == RaceStatus::ENDED)
                                 {
                                     ImGui::SameLine();
-                                    std::string popUpLabel = "Fix Lap " + std::to_string(lapi);
+                                    std::string popUpLabel = "Fix Lap " + std::to_string(lapi)+ " with: " + FormatTime((raceCamera.markTwo - raceCamera.markOne) * 1000);
                                     if (ImGui::Button(popUpLabel.c_str()))
                                     {
                                         double lapTime = raceCamera.markTwo - raceCamera.markOne;
