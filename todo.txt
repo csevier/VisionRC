@@ -2,7 +2,6 @@ Features for v1
 =============
 Improve all audio. (ie maybe reconsider my voice on the states? How does this effect localization?)
 need zone export and import
-maybe we should do a bunch of tooltips.
 
 Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
 =============
