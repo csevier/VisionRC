@@ -75,6 +75,13 @@ void Camera::NextFrame()
     cv::Mat currentFrameBGR;
     cv::Mat currentFrameHSV;
     mVideo >> currentFrameBGR;
+    std::cout << "before: " << currentFrameBGR.size() << std::endl;
+    if (currentFrameBGR.size().width != 640 || currentFrameBGR.size().height !=480)
+    {
+        std::cout << "resized!" << std::endl;
+        cv::resize(currentFrameBGR, currentFrameBGR, cv::Size(640, 480), 0, 0, cv::INTER_CUBIC);
+    }
+    std::cout << "after: " << currentFrameBGR.size() << std::endl;
     cv::cvtColor(currentFrameBGR, currentFrameHSV,cv::COLOR_BGR2HSV_FULL);
     mFrameTimeStamp = std::chrono::system_clock::now();
     mMasks["main_bgr"]->SetMatrix(currentFrameBGR);
@@ -178,7 +185,7 @@ void Camera::Draw()
 {
     ImGui::Begin("Race Camera");
     ImGui::BeginChild("Race Camera",ImVec2(0, 0),ImGuiChildFlags_None, ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
-    ImGui::Image((void*)mMasks["main_bgr"]->GetTexture(), ImVec2(mMasks["main_bgr"]->GetWidth(),mMasks["main_bgr"]->GetHeight()));
+    ImGui::Image((void*)mMasks["main_bgr"]->GetTexture(), ImVec2(640,480));
     ImVec2 race_cam_min_loc = ImGui::GetItemRectMin();
     ImVec2 race_cam_size = ImGui::GetItemRectSize();
     ImVec2 mouse_pos  = ImGui::GetMousePos();
@@ -272,7 +279,7 @@ void Camera::Draw()
     }
     else
     {
-         SampleColor(race_cam_min_loc, race_cam_size);
+        SampleColor(race_cam_min_loc, race_cam_size);
     }
     ImGui::EndChild(); // race cam scroll area ending.
 
@@ -366,8 +373,8 @@ void Camera::Draw()
 
             if (ImGui::BeginTabItem(mask.first.c_str()))
             {
-                ImGui::BeginChild(mask.first.c_str(),ImVec2(0, 0),ImGuiChildFlags_None,ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
-                ImGui::Image((void*)mask.second->GetTexture(), ImVec2(mask.second->GetWidth(),mask.second->GetHeight()));
+                ImGui::BeginChild(mask.first.c_str(),ImVec2(0, 0),ImGuiChildFlags_None, ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
+                ImGui::Image((void*)mask.second->GetTexture(), ImVec2(640,480));
                 ImGui::EndChild();
                 ImGui::EndTabItem();
             }
