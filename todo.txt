@@ -1,15 +1,8 @@
 Features for v1
 =============
-Improve all audio. (ie maybe reconsider my voice on the states? How does this effect localization?) -- change this to espeak.
-
-Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
-=============
-Recording isnt working on remote camera? (should i remove remote cam?)
-Should we make it that a zone cant see a user if the user has not gone through other zones.
-in the pace window, retain positional order for new race.
-Big Race Viewing mode. - make the race data of all racers available.
+Improve all audio. (ie maybe reconsider my voice on the states? How does this effect localization?) -- change this to ESPEAK TTS.
 Make the pixel count visible to users so they can dial in the required pixel section.
-A Pre race double check todo system.
+Big Race Viewing mode. - make the race data of all racers available. (more of a grid view, maybe have a look at liveRC tracker to know which data)
 Race modes:
   Training
   Lap Count
@@ -17,12 +10,22 @@ Race modes:
     - most laps in time
     - fastest lap in time
 
-LOOK INTO ESPEAK TTS SYSTEM
 
 Work on all aspects of usablility
      - Sets of pre-configured window layouts
-     - Fix that vertical scrolls is always now required on race cam.
-     - Buttons for race corrections in offline mode are to big.
+
+
+Write Documentation
+     - Intuitive Docs
+     - Intuitive Video Course
+
+Package it up!! were done soon.
+    - need to statically compile in dependencies and test ALL PLATFORMS
+
+
+Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
+=============
+Recording isnt working on remote camera? (should i remove remote cam?)
 
 Test All features on these platforms:
     - Linux
@@ -33,14 +36,10 @@ Test Cams
         - Test with phones tethered as usb cams.
         - Test with ip cams
 
-Write Documentation
-     - Intuitive Docs
-     - Intuitive Video Course
 
-Package it up!! were done soon.
-    - need to statically compile in dependencies and test ALL PLATFORMS
-
-
-
-
+V2 Maybes
+=============
+Should we make it that a zone cant see a user if the user has not gone through other zones.
+in the pace window, retain positional order for new race.
+A Pre race double check todo system.
 
