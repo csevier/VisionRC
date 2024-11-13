@@ -6,7 +6,6 @@ need zone export and import
 Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
 =============
 Recording isnt working on remote camera? (should i remove remote cam?)
-Import racer colors crashes on spaces in racer name.
 Should we make it that a zone cant see a user if the user has not gone through other zones.
 in the pace window, retain positional order for new race.
 Big Race Viewing mode. - make the race data of all racers available.
