@@ -12,7 +12,7 @@ Write Documentation
      - Intuitive Docs
      - Intuitive Video Course
 
-Package it up!! were done soon.
+Package it up!!
     - need to statically compile in dependencies and test ALL PLATFORMS
 
 
@@ -28,11 +28,4 @@ Test All features on these platforms:
 Test Cams
         - Test with phones tethered as usb cams.
         - Test with ip cams
-
-
-V2 Maybes
-=============
-Should we make it that a zone cant see a user if the user has not gone through other zones.
-in the pace window, retain positional order for new race.
-A Pre race double check todo system.
 
