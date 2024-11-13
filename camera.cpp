@@ -110,6 +110,7 @@ bool Camera::RacerInFrame(Racer& racer)
 {
     mRacerFoundThisFrame = false;
     racer.inFrame = false;
+    racer.mCurrentPixels = 0;
     if(!mMasks.count(racer.GetName()))
     {
        mMasks[racer.GetName()] = std::make_unique<CameraFrame>(mRenderer);
@@ -143,6 +144,7 @@ bool Camera::RacerInFrame(Racer& racer)
             cv::Mat racerMatrix;
             cv::inRange(poly_zone_matrix,lowerColor,upperColor, racerMatrix);
             int resultCount = cv::countNonZero(racerMatrix);
+            racer.mCurrentPixels = resultCount;
             bool racerInZone = resultCount > racer.mRequiredPixels;
             if (racerInZone && i ==0) // finish line is always zone 0
             {
@@ -170,6 +172,7 @@ bool Camera::RacerInFrame(Racer& racer)
     else
     {
         mRacerFoundThisFrame = fullFrameResultCount > racer.mRequiredPixels;
+        racer.mCurrentPixels = fullFrameResultCount;
         if (mRacerFoundThisFrame)
         {
             racer.inFrame = true;

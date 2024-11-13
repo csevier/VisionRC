@@ -379,7 +379,7 @@ bool Race::Draw(Camera& raceCamera)
         std::string notesLabel = racer.second.GetName() + " Notes (1024 characters)";
         ImGui::InputTextMultiline(notesLabel.c_str(), racer.second.GetNotes(), 1024, ImVec2(500,50));
         std::string toleranceLabel = racer.second.GetName() + " Required Pixels";
-        ImGui::SliderInt(toleranceLabel.c_str(), &racer.second.mRequiredPixels, 0, 3000);
+        ImGui::SliderInt(toleranceLabel.c_str(), &racer.second.mRequiredPixels, 0, 1000);
         if(racer.second.inFrame)
         {
             ImGui::LabelText("True", "Racer In Start/Finish Frame: ");
@@ -388,7 +388,7 @@ bool Race::Draw(Camera& raceCamera)
         {
             ImGui::LabelText("False", "Racer In Start/Finish Frame: ");
         }
-
+        ImGui::LabelText("Zone/Frame Pixel Count", std::to_string(racer.second.mCurrentPixels).c_str());
         std::string inZonelabel;
         if (racer.second.mCurrentZone != -1)
         {
@@ -404,6 +404,7 @@ bool Race::Draw(Camera& raceCamera)
         {
             ImGui::LabelText("Not in Zone", "Racer In Zone: ");
         }
+
         if (racer.second.mLastZone != -1)
         {
             if (racer.second.mLastZone ==0)

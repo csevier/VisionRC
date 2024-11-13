@@ -23,6 +23,7 @@ struct Racer_t
     std::vector<Racer_t> mOverlappingWith;
     char mNotes[1024] = "";
     int mRequiredPixels = 0;
+    int mCurrentPixels  = 0;
     bool inFrame = false;
 };
 // end c api
@@ -65,6 +66,7 @@ public:
     Uint32 FastestLapTime();
     Uint32 SlowestLapTime();
     int mRequiredPixels = 0;
+    int mCurrentPixels  = 0;
     bool inFrame = false;
     bool racerIsDone = false;
     int mLastZone = -1;
