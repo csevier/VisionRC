@@ -6,6 +6,7 @@
 #include <chrono>
 #include <SDL2/SDL.h>
 #include <map>
+#include <imfilebrowser.h>
 
 class Camera
 {
@@ -33,6 +34,8 @@ public:
     bool mIsOfflineMode = false;
     double markOne = 0;
     double markTwo = 0;
+    void ExportZones(std::string fileName);
+    void ImportZones(std::string fileName);
 
 private:
     void SampleColor(ImVec2 race_cam_min_loc, ImVec2 race_cam_max_loc);
@@ -57,6 +60,7 @@ private:
     double mCameraFPS = 0;
     ImVec2 MouseToRaceCamCoords(ImVec2 race_cam_min_loc,ImVec2 mouse);
     ImVec2 RaceCamToMouseCoords(ImVec2 race_cam_min_loc,ImVec2 raceCam);
-};
+    ImGui::FileBrowser mZoneExportDialogue{ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_EnterNewFilename | ImGuiFileBrowserFlags_::ImGuiFileBrowserFlags_CreateNewDir};
+    ImGui::FileBrowser mZoneImportDialogue;};
 
 #endif // CAMERA_H

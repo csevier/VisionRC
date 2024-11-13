@@ -4,9 +4,15 @@
 #include "race.h"
 #include <cmath>
 #include <iostream>
+#include <fstream>
+#include <ostream>
 
 Camera::Camera(SDL_Renderer* renderer, std::string filenameOrIp, bool isOffline)
 {
+    mZoneExportDialogue.SetTitle("Exporting Zones");
+    mZoneExportDialogue.SetTypeFilters({ ".txt"});
+    mZoneImportDialogue.SetTitle("Importing Zones");
+    mZoneImportDialogue.SetTypeFilters({ ".txt"});
     mRenderer = renderer;
     mVideo = cv::VideoCapture(filenameOrIp);
     if(!mVideo.isOpened())
@@ -30,6 +36,11 @@ Camera::Camera(SDL_Renderer* renderer, std::string filenameOrIp, bool isOffline)
 
 Camera::Camera(SDL_Renderer* renderer, int id)
 {
+    mZoneExportDialogue.SetTitle("Exporting Zones");
+    mZoneExportDialogue.SetTypeFilters({ ".txt"});
+    mZoneImportDialogue.SetTitle("Importing Zones");
+    mZoneImportDialogue.SetTypeFilters({ ".txt"});
+
     mRenderer = renderer;
     #ifdef __linux__
         mVideo = cv::VideoCapture(id, cv::CAP_V4L2);
@@ -180,6 +191,22 @@ Camera::~Camera()
 
 void Camera::Draw()
 {
+    if(ImGui::BeginMainMenuBar())
+    {
+        if(ImGui::BeginMenu("Zones"))
+        {
+            if(ImGui::MenuItem("Import Zones", NULL, false, CURRENT_RACE.GetRaceStatus() == RaceStatus::NOT_STARTED))
+            {
+                mZoneImportDialogue.Open();
+            }
+            if(ImGui::MenuItem("Export Zones", NULL, false, CURRENT_RACE.GetRaceStatus() == RaceStatus::NOT_STARTED))
+            {
+                mZoneExportDialogue.Open();
+            }
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+    }
     ImGui::Begin("Race Camera");
     ImGui::BeginTabBar("Race Camera");
     ImGui::BeginTabItem("Race Camera");
@@ -381,6 +408,25 @@ void Camera::Draw()
     }
 
     ImGui::End();
+    if(mZoneExportDialogue.HasSelected())
+    {
+        std::string  exportLocation = mZoneExportDialogue.GetSelected().string();
+        std::filesystem::path file = exportLocation;
+        if (!file.has_extension() || file.extension() != ".txt")
+        {
+            exportLocation += ".txt";
+        }
+        ExportZones(exportLocation);
+        mZoneExportDialogue.ClearSelected();
+    }
+    if(mZoneImportDialogue.HasSelected())
+    {
+        std::string  importLocation = mZoneImportDialogue.GetSelected().string();
+        ImportZones(importLocation);
+        mZoneImportDialogue.ClearSelected();
+    }
+    mZoneExportDialogue.Display();
+    mZoneImportDialogue.Display();
 }
 
 void Camera::SampleColor(ImVec2 race_cam_min_loc, ImVec2 race_cam_size)
@@ -525,4 +571,53 @@ bool Camera::IsVideoOver()
 void Camera::RemoveMask(std::string maskName)
 {
     mMasks.erase(maskName);
+}
+
+void Camera::ExportZones(std::string fileName)
+{
+    std::ofstream out(fileName);
+    for(auto& zone: polyZones)
+    {
+        for (auto& point : zone)
+        {
+            out << point.x << " ";
+            out << point.y << " ";
+        }
+        out << std::endl;
+    }
+    out.close();
+}
+
+void Camera::ImportZones(std::string fileName)
+{
+    polyZones.clear();
+    std::ifstream in(fileName);
+    std::string points;
+    while(getline(in, points))
+    {
+        std::stringstream pss(points);
+        std::string point;
+        std::vector<ImVec2> zone;
+        int x = -1;
+        int y = -1;
+        while(pss >> point)
+        {
+            if (x == -1)
+            {
+                x = std::stoi(point);
+            }
+            else
+            {
+                y = std::stoi(point);
+            }
+            if (x !=-1 && y !=-1)
+            {
+                zone.push_back(ImVec2(x,y));
+                x = -1;
+                y = -1;
+            }
+        };
+        polyZones.push_back(zone);
+    }
+    in.close();
 }
