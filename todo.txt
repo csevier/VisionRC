@@ -6,6 +6,20 @@ need zone export and import
 Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
 =============
 Recording isnt working on remote camera? (should i remove remote cam?)
+Import racer colors crashes on spaces in racer name.
+Should we make it that a zone cant see a user if the user has not gone through other zones.
+in the pace window, retain positional order for new race.
+Big Race Viewing mode. - make the race data of all racers available.
+Make the pixel count visible to users so they can dial in the required pixel section.
+A Pre race double check todo system.
+Race modes:
+  Training
+  Lap Count
+  Time
+    - most laps in time
+    - fastest lap in time
+
+LOOK INTO ESPEAK TTS SYSTEM
 
 Work on all aspects of usablility
      - Sets of pre-configured window layouts
@@ -27,6 +41,8 @@ Write Documentation
 
 Package it up!! were done soon.
     - need to statically compile in dependencies and test ALL PLATFORMS
+
+
 
 
 

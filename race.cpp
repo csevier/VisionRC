@@ -748,7 +748,8 @@ void Race::ExportColors(std::string& location)
     std::ofstream out(location);
     for(auto& racer: mRacers)
     {
-        out << racer.second.GetName() << " ";
+        out << racer.second.GetName();
+        out << std::endl;
         out << racer.second.GetColorHSV255().x<< " ";
         out << racer.second.GetColorHSV255().y<< " ";
         out << racer.second.GetColorHSV255().z<< " ";
@@ -758,7 +759,7 @@ void Race::ExportColors(std::string& location)
         out << racer.second.GetLowerColorHSV255().x<< " ";
         out << racer.second.GetLowerColorHSV255().y<< " ";
         out << racer.second.GetLowerColorHSV255().z<< " ";
-        out << std::to_string(racer.second.mRequiredPixels) << " ";
+        out << std::to_string(racer.second.mRequiredPixels);
         out << std::endl;
     }
     out.close();
@@ -780,8 +781,11 @@ void Race::ImportColors(std::string& location)
     std::string lowerS;
     std::string lowerV;
     std::string requiredPixels;
-    while(in >> name >> baseH >> baseS >> baseV >> upperH >> upperS >> upperV >> lowerH >> lowerS >> lowerV >> requiredPixels)
+    char space;
+    while(getline(in, name))
     {
+        in >> baseH >> baseS >> baseV >> upperH >> upperS >> upperV >> lowerH >> lowerS >> lowerV >> requiredPixels >> space;
+        in.seekg(in.tellg() - 1);
         Racer racer;
         racer.SetName(name);
         racer.SetColor(std::stof(baseH),std::stof(baseS),std::stof(baseV));
