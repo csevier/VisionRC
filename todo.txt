@@ -1,7 +1,6 @@
 Features for v1
 =============
-Improve all audio. (ie maybe reconsider my voice on the states? How does this effect localization?)
-need zone export and import
+Improve all audio. (ie maybe reconsider my voice on the states? How does this effect localization?) -- change this to espeak.
 
 Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
 =============
