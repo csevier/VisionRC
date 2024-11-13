@@ -41,6 +41,8 @@ public:
     Uint32 countDownStartedAt = 0;
     Uint32 lastCountDownTonePlayedAt = 0;
     bool autoStart = false;
+    int mMode = 0;
+    int mRaceTime = 1; // in minutes
 
 private:
     std::map<std::string, Racer> mRacers;

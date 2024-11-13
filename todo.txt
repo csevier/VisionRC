@@ -3,13 +3,6 @@ Features for v1
 Improve all audio. (ie maybe reconsider my voice on the states? How does this effect localization?) -- change this to ESPEAK TTS.
 Make the pixel count visible to users so they can dial in the required pixel section.
 Big Race Viewing mode. - make the race data of all racers available. (more of a grid view, maybe have a look at liveRC tracker to know which data)
-Race modes:
-  Training
-  Lap Count
-  Time
-    - most laps in time
-    - fastest lap in time
-
 
 Work on all aspects of usablility
      - Sets of pre-configured window layouts
@@ -23,7 +16,7 @@ Package it up!! were done soon.
     - need to statically compile in dependencies and test ALL PLATFORMS
 
 
-Bugs  CRITICAL, CANT SHIP WITHOUT FIX.
+Bugs  CRITICAL, CANT SHIP WITHOUT FIX/Testing.
 =============
 Recording isnt working on remote camera? (should i remove remote cam?)
 

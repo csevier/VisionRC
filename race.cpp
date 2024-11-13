@@ -85,7 +85,22 @@ bool Race::Draw(Camera& raceCamera)
 {
     bool shouldResetToSource = false;
     ImGui::Begin("Race");
-    ImGui::SliderInt("Lap Count", &lapCount, 1, 500);
+    ImGui::BeginDisabled(GetRaceStatus() == RaceStatus::RUNNING);
+    ImGui::Combo("Race Mode", &mMode, "Laps\0Training\0Time\0\0");
+    if (mMode == 0) // laps
+    {
+        ImGui::SliderInt("Lap Count", &lapCount, 1, 50);
+    }
+    else if (mMode ==1) // Training
+    {
+        // race can only end when button is pressed.
+    }
+    else // time
+    {
+        ImGui::SliderInt("Time In Minutes", &mRaceTime, 1, 20);
+    }
+    ImGui::EndDisabled();
+
     int delayInSeconds  = mRacerClockInDelay / 1000;
     if(ImGui::SliderInt("Racer Delay", &delayInSeconds,0,100))
     {
@@ -560,22 +575,33 @@ void Race::Update(Camera& raceCamera)
     if(GetRaceStatus() == RaceStatus::RUNNING)
     {
         bool allRacersDone = true;
-        for (auto& racer : mRacers)
+        if (mMode == 0) // laps
         {
-            if(racer.second.GetTotalLaps() <  lapCount)
+            for (auto& racer : mRacers)
             {
-                allRacersDone = false;
-                racer.second.racerIsDone = false;
+                if(racer.second.GetTotalLaps() <  lapCount)
+                {
+                    allRacersDone = false;
+                    racer.second.racerIsDone = false;
+                }
+                else
+                {
+                    racer.second.racerIsDone = true;
+                }
             }
-            else
+            if (allRacersDone)
             {
-               racer.second.racerIsDone = true;
+                EndRace();
             }
         }
-        if (allRacersDone)
+        if (mMode == 2) // time
         {
-            EndRace();
+            if ( mCurrentTime >= (mRaceTime * 60 * 1000))
+            {
+                EndRace();
+            }
         }
+
         if (raceCamera.IsVideoOver())
         {
             EndRace();
