@@ -1,7 +1,6 @@
 Features for v1
 =============
 Improve all audio. (ie maybe reconsider my voice on the states? How does this effect localization?) -- change this to ESPEAK TTS.
-Make the pixel count visible to users so they can dial in the required pixel section.
 Big Race Viewing mode. - make the race data of all racers available. (more of a grid view, maybe have a look at liveRC tracker to know which data)
 
 Work on all aspects of usablility
