@@ -201,7 +201,6 @@ bool Race::Draw(Camera& raceCamera)
     }
     mExportDialogue.Display();
     ImGui::Checkbox("Autostart when all racers check-in.", &autoStart);
-    ImGui::LabelText(FormatTime(mCurrentTime).c_str(), "Race Timer: ");
     ImGui::End();
     ImGui::Begin("Race Overview");
     if (mMode == 0) // laps
