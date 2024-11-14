@@ -62,7 +62,6 @@ private:
     ImGui::FileBrowser mRacerColorImportDialogue;
     std::string mSelectRecordingLocation;
     Mix_Chunk* mToneSFX = nullptr;
-    Mix_Chunk* mRaceStartedSFX = nullptr;
     Mix_Chunk* mRaceStartingSFX = nullptr;
     Mix_Chunk* mRaceEndedSFX = nullptr;
     Mix_Chunk* mCheckinSFX = nullptr;

@@ -49,11 +49,6 @@ Race::Race()
     {
         printf( "Failed to load ended effect! SDL_mixer Error: %s\n", Mix_GetError() );
     }
-    mRaceStartedSFX = Mix_LoadWAV( "race_started.wav" );
-    if( mRaceStartedSFX == NULL )
-    {
-        printf( "Failed to load started effect! SDL_mixer Error: %s\n", Mix_GetError() );
-    }
 
     mCheckinSFX = Mix_LoadWAV( "race_checkin.wav" );
     if( mCheckinSFX == NULL )
