@@ -1,10 +1,8 @@
 Features for v1
 =============
-Improve all audio. (ie maybe reconsider my voice on the states? How does this effect localization?) -- change this to ESPEAK TTS.
 Big Race Viewing mode. - make the race data of all racers available. (more of a grid view, maybe have a look at liveRC tracker to know which data)
 
-Work on all aspects of usablility
-     - Sets of pre-configured window layouts
+Sets of pre-configured window layouts
 
 
 Write Documentation
@@ -14,11 +12,6 @@ Write Documentation
 Package it up!!
     - need to statically compile in dependencies and test ALL PLATFORMS
 
-
-Bugs  CRITICAL, CANT SHIP WITHOUT FIX/Testing.
-=============
-Recording isnt working on remote camera? (should i remove remote cam?)
-
 Test All features on these platforms:
     - Linux
     - Windows
@@ -27,4 +20,11 @@ Test All features on these platforms:
 Test Cams
         - Test with phones tethered as usb cams.
         - Test with ip cams
+
+
+
+Bugs  CRITICAL, CANT SHIP WITHOUT FIX/Testing.
+=============
+Recording isnt working on remote camera? (should i remove remote cam?)
+
 

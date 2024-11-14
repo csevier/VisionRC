@@ -162,7 +162,7 @@ bool Race::Draw(Camera& raceCamera)
         }
         break;
     case RaceStatus::COUNTING_DOWN:
-	ImGui::LabelText("Counting Down!", "Status: ");
+        ImGui::LabelText("Counting Down!", "Status: ");
         if (ImGui::Button("New Race"))
         {
             Reset();
@@ -202,6 +202,81 @@ bool Race::Draw(Camera& raceCamera)
     mExportDialogue.Display();
     ImGui::Checkbox("Autostart when all racers check-in.", &autoStart);
     ImGui::LabelText(FormatTime(mCurrentTime).c_str(), "Race Timer: ");
+    ImGui::End();
+    ImGui::Begin("Race Overview");
+    if (mMode == 0) // laps
+    {
+        ImGui::LabelText("Laps", "Mode: ");
+        ImGui::LabelText(FormatTime(mCurrentTime).c_str(), "Race Timer: ");
+        ImGui::LabelText(std::to_string(lapCount).c_str(), "Laps To Finish: ");
+    }
+    if (mMode == 1) // training
+    {
+        ImGui::LabelText("Training", "Mode: ");
+        ImGui::LabelText(FormatTime(mCurrentTime).c_str(), "Race Timer: ");
+    }
+    if (mMode == 2) // timed
+    {
+        ImGui::LabelText("Time", "Mode: ");
+        ImGui::LabelText(FormatTime(mCurrentTime).c_str(), "Race Timer: ");
+        ImGui::LabelText(FormatTime((mRaceTime * 60 * 1000) - mCurrentTime).c_str(), "Time Left: ");
+    }
+    if (ImGui::BeginTable("Race Overview", 7, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
+    {
+
+        ImGui::TableSetupColumn("Position");
+        ImGui::TableSetupColumn("Color/Name");
+        ImGui::TableSetupColumn("Laps");
+        ImGui::TableSetupColumn("Current Lap Time");
+        ImGui::TableSetupColumn("Pace");
+        ImGui::TableSetupColumn("Average Lap");
+        ImGui::TableSetupColumn("Fastest Lap");
+        ImGui::TableHeadersRow();
+
+        std::vector<Racer> racerPositions = GetRacePositions();
+        for(int i = 0; i < racerPositions.size(); i++)
+        {
+            Racer racer = racerPositions[i];
+            ImGui::TableNextRow();
+            for (int column = 0; column < 7; column++)
+            {
+                ImGui::TableSetColumnIndex(column);
+                switch (column)
+                {
+                case 0:
+                    ImGui::TextUnformatted(std::to_string(i+1).c_str());
+                    break;
+                case 1:
+                {
+                    float color[3] = {racer.GetColorHSV255().x / 255, racer.GetColorHSV255().y/ 255, racer.GetColorHSV255().z / 255 };
+                    ImGui::ColorEdit3(racer.GetName().c_str(),
+                                      color,
+                                      ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_InputHSV);
+                    break;
+                }
+                case 2:
+                    ImGui::TextUnformatted(std::to_string(racer.GetTotalLaps()).c_str());
+                    break;
+                case 3:
+                {
+                    ImGui::TextUnformatted(FormatTime(racer.GetCurrentLapTime(mCurrentTime)).c_str());
+                    //ImGui::TextUnformatted(racer.Get);
+                    break;
+                }
+                case 4:
+                    ImGui::TextUnformatted((std::to_string(racer.GetTotalLaps()) + "/"+ FormatTime(racer.GetTotalTime())).c_str());
+                    break;
+                case 5:
+                    ImGui::TextUnformatted(FormatTime(racer.AverageLapTime()).c_str());
+                    break;
+                case 6:
+                    ImGui::TextUnformatted(FormatTime(racer.FastestLapTime()).c_str());
+                    break;
+                }
+            }
+        }
+        ImGui::EndTable();
+    }
     ImGui::End();
 
     ImGui::Begin("Lap Data");
