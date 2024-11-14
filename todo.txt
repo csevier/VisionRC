@@ -1,9 +1,6 @@
 Features for v1
 =============
-Big Race Viewing mode. - make the race data of all racers available. (more of a grid view, maybe have a look at liveRC tracker to know which data)
-
 Sets of pre-configured window layouts
-
 
 Write Documentation
      - Intuitive Docs
