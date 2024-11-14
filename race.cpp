@@ -79,7 +79,7 @@ void Race::RemoveRacer(std::string racerName)
 bool Race::Draw(Camera& raceCamera)
 {
     bool shouldResetToSource = false;
-    ImGui::Begin("Race");
+    ImGui::Begin("Race Configuration");
     ImGui::BeginDisabled(GetRaceStatus() == RaceStatus::RUNNING);
     ImGui::Combo("Race Mode", &mMode, "Laps\0Training\0Time\0\0");
     if (mMode == 0) // laps
@@ -278,7 +278,7 @@ bool Race::Draw(Camera& raceCamera)
     }
     ImGui::End();
 
-    ImGui::Begin("Lap Data");
+    ImGui::Begin("Detailed Lap Data");
     ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
     if (ImGui::BeginTabBar("Laps", tab_bar_flags))
     {
