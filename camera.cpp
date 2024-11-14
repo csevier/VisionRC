@@ -315,7 +315,7 @@ void Camera::Draw()
 
     if (!mIsOfflineMode)
     {
-        ImGui::Checkbox("Auto Exposure - Can effect race times in low light settings. Make sure Timing Fidelity is green.", &mAutoExposure);
+        ImGui::Checkbox("Auto Exposure - Can effect race times in low light settings.", &mAutoExposure);
         if (mAutoExposure)
         {
             mVideo.set(cv::CAP_PROP_AUTO_EXPOSURE, 3);

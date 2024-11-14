@@ -89,7 +89,7 @@ int App::Run()
 {
 
     // Our state
-    bool show_demo_window = false;
+    bool show_demo_window =  false;
     //ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
     std::unique_ptr<Camera> race_camera = nullptr;

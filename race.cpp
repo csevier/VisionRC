@@ -404,6 +404,22 @@ bool Race::Draw(Camera& raceCamera)
         }
         ImGui::EndMainMenuBar();
     }
+    // if(ImGui::BeginMainMenuBar())
+    // {
+    //     if (ImGui::BeginMenu("Window"))
+    //     {
+    //         if (ImGui::MenuItem("Default Layout"))
+    //         {
+    //             ImGui::LoadIniSettingsFromDisk("saved.ini");
+    //         }
+    //         if (ImGui::MenuItem("Save Layout"))
+    //         {
+    //             ImGui::SaveIniSettingsToDisk("saved.ini");
+    //         }
+    //         ImGui::EndMenu();
+    //     }
+    //     ImGui::EndMainMenuBar();
+    // }
     ImGui::Begin("Racers");
     if(mRacerColorExportDialogue.HasSelected())
     {
