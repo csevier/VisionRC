@@ -2,12 +2,12 @@ Features for v1
 =============
 Sets of pre-configured window layouts
 
-Write Documentation
+
+Pre-Release Things:
+=============
+Write/Record Documentation
      - Intuitive Docs
      - Intuitive Video Course
-
-Package it up!!
-    - need to statically compile in dependencies and test ALL PLATFORMS
 
 Test All features on these platforms:
     - Linux
@@ -18,7 +18,11 @@ Test Cams
         - Test with phones tethered as usb cams.
         - Test with ip cams
 
+Package it up!!
+    - need to statically compile in dependencies and test ALL PLATFORMS
 
+Finish Website
+    - Follow up with JR
 
 Bugs  CRITICAL, CANT SHIP WITHOUT FIX/Testing.
 =============
