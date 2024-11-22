@@ -4,6 +4,7 @@ project(VisionRC LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+include(GNUInstallDirs)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
@@ -45,23 +46,21 @@ install(TARGETS VisionRC
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/sounds/race_checkin.wav
-    DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/sounds/race_ended.wav
-    DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/sounds/race_starting.wav
-    DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/sounds/tone.wav
-    DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/sounds/tone_high.wav
-    DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/imgui.ini
-    DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/default.ini
-    DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+set(SOUND_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/sounds/race_checkin.wav
+    ${CMAKE_CURRENT_SOURCE_DIR}/sounds/race_ended.wav
+    ${CMAKE_CURRENT_SOURCE_DIR}/sounds/race_starting.wav
+    ${CMAKE_CURRENT_SOURCE_DIR}/sounds/tone.wav
+    ${CMAKE_CURRENT_SOURCE_DIR}/sounds/tone_high.wav
+)
+set(INI_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/imgui.ini
+    ${CMAKE_CURRENT_SOURCE_DIR}/default.ini
+)
+add_custom_command(TARGET VisionRC POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${SOUND_FILES} ${INI_FILES}
+    $<TARGET_FILE_DIR:VisionRC>
+)
+install(FILES ${SOUND_FILES} ${INI_FILES} DESTINATION ${CMAKE_INSTALL_BINDIR})
