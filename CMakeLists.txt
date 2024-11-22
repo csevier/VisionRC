@@ -33,41 +33,10 @@ if(TARGET SDL2::Mixer)
     target_link_libraries(VisionRC PRIVATE SDL2::Mixer)
 endif()
 
-add_library(imgui
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/imgui.cpp
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/imgui.h
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/imconfig.h
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/imgui_demo.cpp
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/imgui_draw.cpp
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/imgui_internal.h
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/imgui_tables.cpp
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/imgui_widgets.cpp
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/imstb_rectpack.h
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/imstb_textedit.h
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/imstb_truetype.h
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/imfilebrowser.h
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/implot.h
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/implot.cpp
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/implot_internal.h
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/implot_items.cpp
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/implot_demo.cpp
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_sdl2.h
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_sdl2.cpp
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_sdlrenderer2.h
-  ${CMAKE_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_sdlrenderer2.cpp)
-
-
-target_include_directories(imgui PUBLIC ${CMAKE_SOURCE_DIR}/third_party/imgui ${CMAKE_SOURCE_DIR}/third_party/imgui/backends)
+add_subdirectory(third_party) # Brings in ImGui
 
 # Link to the actual SDL2 library. SDL2::SDL2 is the shared SDL library, SDL2::SDL2-static is the static SDL libarary.
 target_link_libraries(VisionRC PRIVATE SDL2::SDL2 SDL2_mixer ${OpenCV_LIBS} imgui)
-
-target_link_directories(VisionRC PRIVATE
-    ${OpenCV_LIB_DIRS}
-    )
-target_include_directories(VisionRC PRIVATE
-    ${OpenCV_INCLUDE_DIRS}
-    )
 
 install(TARGETS VisionRC
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
