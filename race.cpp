@@ -130,11 +130,11 @@ bool Race::Draw(Camera& raceCamera)
     }
     if(!mSelectRecordingLocation.empty())
     {
-        ImGui::Text(mSelectRecordingLocation.c_str());
+        ImGui::TextUnformatted(mSelectRecordingLocation.c_str());
     }
     else
     {
-        ImGui::Text("Not Recording - Select Video To Record.");
+        ImGui::TextUnformatted("Not Recording - Select Video To Record.");
     }
     if (ImGui::BeginItemTooltip())
     {
@@ -366,10 +366,10 @@ bool Race::Draw(Camera& raceCamera)
             {
 
                 std::string label = std::to_string(i + 1) + ": ";
-                ImGui::LabelText(racerPositions[i].GetName().c_str(), label.c_str());
+                ImGui::LabelText(racerPositions[i].GetName().c_str(), "%s", label.c_str());
                 ImGui::SameLine();
                 std::string totals = std::to_string(racerPositions[i].GetTotalLaps()) + "/"+ FormatTime(racerPositions[i].GetTotalTime());
-                ImGui::Text(totals.c_str());
+                ImGui::TextUnformatted(totals.c_str());
             }
             ImGui::EndTabItem();
         }
@@ -473,7 +473,7 @@ bool Race::Draw(Camera& raceCamera)
         {
             ImGui::LabelText("False", "Racer In Start/Finish Frame: ");
         }
-        ImGui::LabelText("Zone/Frame Pixel Count", std::to_string(racer.second.mCurrentPixels).c_str());
+        ImGui::LabelText("Zone/Frame Pixel Count", "%s", std::to_string(racer.second.mCurrentPixels).c_str());
         std::string inZonelabel;
         if (racer.second.mCurrentZone != -1)
         {
@@ -531,7 +531,7 @@ bool Race::Draw(Camera& raceCamera)
                             if (racerInFrame.GetName() == overlap.GetName()) continue;
                             names += overlap.GetName() + " ";
                         }
-                        ImGui::TextColored(ImVec4(1,0,0,1), names.c_str());
+                        ImGui::TextColored(ImVec4(1,0,0,1), "%s", names.c_str());
                     }
                 }
             }
@@ -897,7 +897,7 @@ void Race::ImportColors(std::string& location)
     while(getline(in, name))
     {
         in >> baseH >> baseS >> baseV >> upperH >> upperS >> upperV >> lowerH >> lowerS >> lowerV >> requiredPixels >> space;
-        in.seekg(in.tellg() - 1);
+        in.seekg(in.tellg() - static_cast<std::istream::pos_type>(1));
         Racer racer;
         racer.SetName(name);
         racer.SetColor(std::stof(baseH),std::stof(baseS),std::stof(baseV));
