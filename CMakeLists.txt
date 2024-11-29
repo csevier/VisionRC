@@ -38,13 +38,13 @@ endif()
 
 if(TARGET SDL2::Mixer)
     # It has an implicit dependency on SDL2 functions, so it MUST be added before SDL2::SDL2 (or SDL2::SDL2-static)
-    target_link_libraries(VisionRC PRIVATE SDL2::mixer-static)
+    target_link_libraries(VisionRC PRIVATE SDL2::mixer)
 endif()
 
 add_subdirectory(third_party) # Brings in ImGui
 
 # Link to the actual SDL2 library. SDL2::SDL2 is the shared SDL library, SDL2::SDL2-static is the static SDL libarary.
-target_link_libraries(VisionRC PRIVATE SDL2::SDL2-static SDL2_mixer::SDL2_mixer-static ${OpenCV_LIBS} imgui)
+target_link_libraries(VisionRC PRIVATE SDL2::SDL2 SDL2_mixer::SDL2_mixer ${OpenCV_LIBS} imgui)
 
 install(TARGETS VisionRC
 #    RUNTIME_DEPENDENCIES
@@ -52,6 +52,10 @@ install(TARGETS VisionRC
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+if(WIN32)
+    install(IMPORTED_RUNTIME_ARTIFACTS VisionRC)
+endif()
 
 set(SOUND_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/sounds/race_checkin.wav

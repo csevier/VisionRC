@@ -26,7 +26,7 @@ if(LINUX)
     if("${OS_NAME}" STREQUAL "ubuntu")
         list(APPEND CPACK_GENERATOR "DEB")
     endif()
-    if("${OS_NAME}" STREQUAL "centos")
+    if("${OS_NAME}" STREQUAL "fedora")
         list(APPEND CPACK_GENERATOR "RPM")
     endif()
     set(CPACK_SOURCE_GENERATOR "TGZ")
@@ -40,7 +40,8 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl2-2.0-0, libsdl2-mixer-2.0-0, libopencv-
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "VisionRC")
 
 # RPM package specifics
-#set(CPACK_RPM_PACKAGE_DEPENDS "")
+set(CPACK_RPM_PACKAGE_AUTOREQ OFF)
+set(CPACK_RPM_PACKAGE_REQUIRES "opencv, SDL2, SDL2_mixer")
 
 include(CPack)
 
