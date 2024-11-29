@@ -1,0 +1,37 @@
+
+stages:
+  - build
+
+build-ubuntu:
+  tags:
+    - docker
+  image: ubuntu:latest
+  stage: build
+  before_script:
+    - apt update && apt install -y build-essential ninja-build cmake g++ libopencv-dev libsdl2-dev libsdl2-mixer-dev libgl1-mesa-dev
+  script:
+    - cmake -DCMAKE_BUILD_TYPE=Release -G Ninja -B build -S .
+    - cmake --build build --target all
+    - cmake --build build --target package
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - build/*.zip
+      - build/*.deb
+
+build-fedora:
+  tags:
+    - docker
+  image: fedora:latest
+  stage: build
+  before_script:
+    - dnf install -y gcc gcc-c++ cmake ninja-build rpm-build opencv-devel SDL2-devel SDL2_mixer-devel
+  script:
+    - cmake -DCMAKE_BUILD_TYPE=Release -G Ninja -B build -S .
+    - cmake --build build --target all
+    - cmake --build build --target package
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - build/*.rpm
+
