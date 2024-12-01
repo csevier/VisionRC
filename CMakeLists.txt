@@ -47,14 +47,14 @@ add_subdirectory(third_party) # Brings in ImGui
 target_link_libraries(VisionRC PRIVATE SDL2::SDL2 SDL2_mixer::SDL2_mixer ${OpenCV_LIBS} imgui)
 
 install(TARGETS VisionRC
-#    RUNTIME_DEPENDENCIES
     BUNDLE  DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
 if(WIN32)
-    install(IMPORTED_RUNTIME_ARTIFACTS VisionRC)
+    install(IMPORTED_RUNTIME_ARTIFACTS ${OpenCV_LIBS} SDL2::SDL2 SDL2_mixer::SDL2_mixer
+		DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()
 
 set(SOUND_FILES
