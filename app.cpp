@@ -8,7 +8,6 @@
 #include <opencv2/objdetect.hpp>
 #include <opencv2/opencv.hpp>
 #include <imgui.h>
-#include <string_view>
 #include <imfilebrowser.h>
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
@@ -154,11 +153,11 @@ int App::Run()
                 std::string label="Camera Polling Every " + std::to_string(1000.0f / ImGui::GetIO().Framerate) +  " ms or " + std::to_string((int)ImGui::GetIO().Framerate) + " times per second";
                 if(ImGui::GetIO().Framerate < 25)
                 {
-                    ImGui::TextColored(ImVec4(1,0,0,1),label.c_str());
+                    ImGui::TextColored(ImVec4(1,0,0,1), "%s", label.c_str());
                 }
                 else
                 {
-                    ImGui::TextColored(ImVec4(0,1,0,1),label.c_str());
+                    ImGui::TextColored(ImVec4(0,1,0,1), "%s", label.c_str());
                 }
                 ImGui::End();
             }
@@ -243,7 +242,7 @@ int App::Run()
                 }
                 if(!errorMessage.empty())
                 {
-                    ImGui::TextColored(ImVec4(1,0,0,1), errorMessage.c_str());
+                    ImGui::TextColored(ImVec4(1,0,0,1), "%s", errorMessage.c_str());
                 }
                 ImGui::End();
                 // select cam type
