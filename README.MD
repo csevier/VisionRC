@@ -18,6 +18,8 @@ Features
 - Supports post race adjudication = A race can be audited for correct times and racer disputes.
 - Supports as many racers as you can differentiate by color.
 - All expected fetures for lap tracing.
+- Exportable Race Results
+- Exportable / Importable Zones & Racer Configurations for static track layouts.
 - 3 Race types
   - Taining Mode = Time yourself infinetly and study your results for improvements
   - Lap Mode = Fastest to lap count wins.
