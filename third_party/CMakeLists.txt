@@ -22,3 +22,4 @@ add_library(imgui
   imgui/backends/imgui_impl_sdlrenderer2.cpp)
 
 target_include_directories(imgui PUBLIC ${CMAKE_SOURCE_DIR}/third_party/imgui ${CMAKE_SOURCE_DIR}/third_party/imgui/backends)
+target_link_libraries(imgui PRIVATE SDL2::SDL2)

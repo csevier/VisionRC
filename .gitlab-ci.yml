@@ -1,3 +1,7 @@
+variables:
+  OPENCV_WIN_PATH: ""
+  SDL2_WIN_PATH: ""
+  SDL2_mixer_WIN_PATH: ""
 
 stages:
   - build
@@ -42,7 +46,7 @@ windows:
     - windows
   stage: build
   script:
-    - cmake -G"Visual Studio 17 2022" -A x64 -DSDL2_DIR=$SDL2_WIN_PATH -DSDL2_mixer_DIR=$SDL2_mixer_WIN_PATH -DOpenCV_DIR=$OPENCV_WIN_PATH -B build -S .
+    - cmake -G"Visual Studio 17 2022" -A x64 -DSDL2_DIR="$env:SDL2_WIN_PATH" -DSDL2_mixer_DIR="$env:SDL2_mixer_WIN_PATH" -DOpenCV_DIR="$env:OPENCV_WIN_PATH" -B build -S .
     - cmake --build build --target ALL_BUILD --config Release
     - cmake --build build --target PACKAGE --config Release
   artifacts:
