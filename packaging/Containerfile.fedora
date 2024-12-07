@@ -1,0 +1,4 @@
+FROM fedora:41
+
+RUN dnf install -y gcc gcc-c++ cmake ninja-build rpm-build opencv-devel SDL2-devel SDL2_mixer-devel
+
