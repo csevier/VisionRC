@@ -17,6 +17,7 @@ Features
 - Voice and tone notifications for key racing info.
 - Supports post race adjudication = A race can be audited for correct times and racer disputes.
 - Supports as many racers as you can differentiate by color.
+- Supports dynamic lighting adjustmest and manual lighting adjustment.
 - All expected fetures for lap tracing.
 - Exportable Race Results
 - Exportable / Importable Zones & Racer Configurations for static track layouts.
