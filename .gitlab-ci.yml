@@ -2,7 +2,7 @@
 stages:
   - build
 
-build-ubuntu:
+ubuntu:
   tags:
     - docker
   image: ubuntu:latest
@@ -10,16 +10,17 @@ build-ubuntu:
   before_script:
     - apt update && apt install -y build-essential ninja-build cmake g++ libopencv-dev libsdl2-dev libsdl2-mixer-dev libgl1-mesa-dev
   script:
-    - cmake -DCMAKE_BUILD_TYPE=Release -G Ninja -B build -S .
+    - cmake -DCMAKE_BUILD_TYPE=Release -DCPACK_SYSTEM_NAME=$CI_JOB_NAME -G Ninja -B build -S .
     - cmake --build build --target all
     - cmake --build build --target package
+    - cmake --build build --target package_source
   artifacts:
     expire_in: 1 week
     paths:
-      - build/*.zip
+      - build/*.tar.gz
       - build/*.deb
 
-build-fedora:
+fedora:
   tags:
     - docker
   image: fedora:latest
@@ -27,11 +28,25 @@ build-fedora:
   before_script:
     - dnf install -y gcc gcc-c++ cmake ninja-build rpm-build opencv-devel SDL2-devel SDL2_mixer-devel
   script:
-    - cmake -DCMAKE_BUILD_TYPE=Release -G Ninja -B build -S .
+    - cmake -DCMAKE_BUILD_TYPE=Release -DCPACK_SYSTEM_NAME=$CI_JOB_NAME -G Ninja -B build -S .
     - cmake --build build --target all
     - cmake --build build --target package
   artifacts:
     expire_in: 1 week
     paths:
       - build/*.rpm
+      - build/*.tar.gz
+
+windows:
+  tags:
+    - windows
+  stage: build
+  script:
+    - cmake -G"Visual Studio 17 2022" -A x64 -DSDL2_DIR=$SDL2_WIN_PATH -DSDL2_mixer_DIR=$SDL2_mixer_WIN_PATH -DOpenCV_DIR=$OPENCV_WIN_PATH -B build -S .
+    - cmake --build build --target ALL_BUILD --config Release
+    - cmake --build build --target PACKAGE --config Release
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - build/*.zip
 
